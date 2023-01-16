@@ -1,8 +1,9 @@
 // Задание 1. Всплывающие окна
 
-let usePopups, newPopup
+let usePopups
 
 function switchActivatingPopup(popupID) {
+    if (!popupID) {return undefined}
     let popup = usePopups[popupID]
     popup.isActivated = !popup.isActivated
     if (popup.isActivated) {
@@ -15,7 +16,7 @@ function switchActivatingPopup(popupID) {
     return popup;
 }
 
-function getTagsByClassName(popup, tagName, className = '') {
+function getTagsByClassName(popup, tagName = 'a', className = '') {
     return Array.from(popup.getElementsByTagName(tagName)).filter(
         tag => tag.className.split(' ').find(name => {
             if (className) { return name === className} else {return true}}))
@@ -49,6 +50,6 @@ console.log('Uses new Popup id =', usePopups.modal_success.popup.id);  // ------
 for (let button of getTagsByClassName(usePopups.modal_main.popup, 'a', 'show-success')) {
     addEventListener(button, 'modal_success', '" с классом "show-success"');}
 
-for (let button of getTagsByClassName(usePopups.modal_success.popup, 'a')) {
+for (let button of getTagsByClassName(usePopups.modal_success.popup)) {
     addEventListener(button, 'modal_success');}
 
