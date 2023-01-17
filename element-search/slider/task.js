@@ -72,10 +72,10 @@ class SimpleNavigator {
 
 // ============================================================     Navigator:
 
-class Navigator {
+class Navigator extends SimpleNavigator{
     constructor(navigatorClasses, sliderSet = new SliderSet()) {
-
-        console.log(`Создан объект "Точки": ${this.dots}`);
+        super(navigatorClasses, sliderSet = new SliderSet());
+        console.log(`Создан навигатор с объектом "Точки": ${this.dots}`);
     }
 }
 
