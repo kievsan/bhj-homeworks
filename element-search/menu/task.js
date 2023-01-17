@@ -29,4 +29,4 @@ function setEventHandlers(menu, ctrlEvent = 'click', activation = 'menu_active')
 }
 
 
-setEventHandlers(mainMenu)
+setEventHandlers(mainMenu);
