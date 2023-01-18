@@ -23,9 +23,8 @@ class Slider {
                     }}) {
         this.slider = new SliderSet(sliderClasses);
         this.navigator = new SimpleNavigator(navigatorClasses, this.slider);
-        console.log(`Создан объект "Слайдер" !`);
+        // console.log(`Создан объект "Слайдер" !`);
     }
-
 }
 
 // ============================================================     SimpleNavigator:
@@ -34,11 +33,11 @@ class SimpleNavigator {
     constructor(navigatorClasses, sliderSet = new SliderSet()) {
         this.classes = navigatorClasses;
         this.sliderSet = sliderSet;
-        console.log(this.getNavigator());  // ----------------------
+        // console.log(this.getNavigator());  // ----------------------
         this.buttons = this.gatherButtons();
         this.handlers = null;
-        console.log('Создан объект "Простой навигатор" !');
-        console.log(this.buttons);  // ----------------------
+        // console.log('Создан объект "Простой навигатор" !');
+        // console.log(this.buttons);  // ----------------------
     }
 
     hasNo(value) { return value === undefined || value === null || isNaN(value) }
@@ -130,14 +129,14 @@ class Navigator extends SimpleNavigator{
 class SliderSet {
     constructor(sliderClasses) {
         this.classes = sliderClasses;
-        console.log(this.getSlider());  // ----------------------
+        // console.log(this.getSlider());  // ----------------------
         this.slides = Array.from(this.gatherSlides());
         this.size = null;
         this.pointer = 0;
         this.classActivator = sliderClasses.classActivator;
         this.activeSlide = null;
-        console.log(`Создан объект "Набор слайдера" !`);
-        console.log(this.slides);  // ----------------------
+        // console.log(`Создан объект "Набор слайдера" !`);
+        // console.log(this.slides);  // ----------------------
     }
 
     hasNo(value) { return value === undefined || value === null || isNaN(value) }
