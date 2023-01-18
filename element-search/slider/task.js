@@ -36,9 +36,19 @@ class SimpleNavigator {
         this.sliderSet = sliderSet;
         console.log(this.getNavigator());  // ----------------------
         this.buttons = this.gatherButtons();
+        this.handlers = null;
         console.log('Создан объект "Простой навигатор" !');
         console.log(this.buttons);  // ----------------------
     }
+
+    hasNo(value) { return value === undefined || value === null || isNaN(value) }
+
+    set handlers (obj) {
+        if (this.hasNo(obj)) {
+            this._handlers = {};
+            this._handlers.mouse = this.setMouseHandlers();}
+    }
+    get handlers () { return this._handlers }
 
     getNavigator() {
         return  document.querySelector('div.' + this.classes.className);
@@ -50,27 +60,58 @@ class SimpleNavigator {
             ' div.' + this.classes.buttonClasses.itemClass);
     }
 
-    setEventHandlers(ctrlEvent = 'click', sliderSet = this.sliderSet) {
-        let printMsg = (targetText) => console.log('Кликнули "', targetText, '"');
-        let buttonClasses = this.classes.buttonClasses;
+    setMouseHandlers() {
+        let handlers = {mousedownIsActive: undefined, button: {}};
+        handlers.mouseActionInform = function (button = handlers.button) {
+            console.log(`${(handlers.mousedownIsActive) ? `НА` : `ОТ`}ЖАТА кнопка мыши в навигаторе на "${button}"`);
+            console.log(`\t${(handlers.mousedownIsActive) ? `` : `НЕ`} МЕНЯЕМ картинку`);
+            if (handlers.mousedownIsActive) { console.log('\t', this.sliderSet.activeSlide.firstChild.baseURI); }
+        }.bind(this);
+        handlers.doProcessButtons = function (button = handlers.button) {
+            if (button.className.includes(this.classes.buttonClasses.preClass)) {
+                handlers.mouseActionInform('Влево');
+                if (handlers.mousedownIsActive) {this.sliderSet.activatePreSlide();}
+            }
+            if (button.className.includes(this.classes.buttonClasses.nextClass)) {
+                handlers.mouseActionInform('Вправо');
+                if (handlers.mousedownIsActive) {this.sliderSet.activateNextSlide();}
+            }
+        }.bind(this);
+        handlers.mousedownHandler = function (event) {
+            handlers.mousedownIsActive = true;
+            handlers.doProcessButtons(event.target);
+        }.bind(this)
+        handlers.mouseupHandler = function (event) {
+            handlers.mousedownIsActive = false;
+            handlers.doProcessButtons(event.target);
+        }.bind(this)
+        return handlers;
+    }
+
+    setMouseEventHandlers() {
         for (let button of this.buttons) {
-            button.addEventListener(ctrlEvent, function (event) {
-                if (button.className.includes(buttonClasses.preClass)) {
-                    printMsg('Влево');
-                    sliderSet.activatePreSlide();
-                }
-                if (button.className.includes(buttonClasses.nextClass)) {
-                    printMsg('Вправо');
-                    sliderSet.activateNextSlide();
-                }});}
+            this.handlers.mouse.button = button;
+            button.addEventListener('mousedown', this.handlers.mouse.mousedownHandler);
+            button.addEventListener('mouseup', this.handlers.mouse.mouseupHandler);}
+    }
+
+    delMouseEventHandlers() {
+        for (let button of this.buttons) {
+            this.handlers.mouse.button = button;
+            button.removeEventListener('mousedown', this.handlers.mouse.mousedownHandler);
+            button.removeEventListener('mouseup', this.handlers.mouse.mouseupHandler);}
     }
 
     start() {
-        this.setEventHandlers();
+        this.setMouseEventHandlers();
+    }
+
+    exit() {
+        this.delMouseEventHandlers();
     }
 }
 
-// ============================================================     Navigator:
+// ============================================================     Navigator: в разработке!
 
 class Navigator extends SimpleNavigator{
     constructor(navigatorClasses, sliderSet = new SliderSet()) {
@@ -120,6 +161,7 @@ class SliderSet {
     activateCurrentSlide() {
         if (!this.slides[this.pointer].className.includes(this.classActivator)) {
             this.slides[this._pointer].classList.add(this.classActivator);
+            this.activeSlide = 'Этот слайд теперь показывается в слайдере!';
         }
     }
 
