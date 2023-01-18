@@ -46,13 +46,12 @@ class SimpleNavigator {
     set handlers (obj) {
         if (this.hasNo(obj)) {
             this._handlers = {};
-            this._handlers.mouse = this.setMouseHandlers();}
+            this._handlers.mouse = this.setMouseHandlers();
+        }
     }
     get handlers () { return this._handlers }
 
-    getNavigator() {
-        return  document.querySelector('div.' + this.classes.className);
-    }
+    getNavigator() {return  document.querySelector('div.' + this.classes.className);}
 
     gatherButtons() {
         return this.getNavigator().querySelectorAll(
@@ -65,16 +64,22 @@ class SimpleNavigator {
         handlers.mouseActionInform = function (button = handlers.button) {
             console.log(`${(handlers.mousedownIsActive) ? `НА` : `ОТ`}ЖАТА кнопка мыши в навигаторе на "${button}"`);
             console.log(`\t${(handlers.mousedownIsActive) ? `` : `НЕ`} МЕНЯЕМ картинку`);
-            if (handlers.mousedownIsActive) { console.log('\t', this.sliderSet.activeSlide.firstChild.baseURI); }
+            if (handlers.mousedownIsActive) {
+                console.log('\t', this.sliderSet.activeSlide.firstChild.baseURI);
+            }
         }.bind(this);
         handlers.doProcessButtons = function (button = handlers.button) {
             if (button.className.includes(this.classes.buttonClasses.preClass)) {
                 handlers.mouseActionInform('Влево');
-                if (handlers.mousedownIsActive) {this.sliderSet.activatePreSlide();}
+                if (handlers.mousedownIsActive) {
+                    this.sliderSet.activatePreSlide();
+                }
             }
             if (button.className.includes(this.classes.buttonClasses.nextClass)) {
                 handlers.mouseActionInform('Вправо');
-                if (handlers.mousedownIsActive) {this.sliderSet.activateNextSlide();}
+                if (handlers.mousedownIsActive) {
+                    this.sliderSet.activateNextSlide();
+                }
             }
         }.bind(this);
         handlers.mousedownHandler = function (event) {
@@ -137,16 +142,24 @@ class SliderSet {
 
     hasNo(value) { return value === undefined || value === null || isNaN(value) }
 
-    set classActivator (class_) { if (this.hasNo(this._classActivator)) {this._classActivator = class_} }
-    get classActivator () { return this._classActivator }
+    set classActivator (class_) {
+        if (this.hasNo(this._classActivator)) {
+            this._classActivator = class_;
+        }
+    }
+    get classActivator () {return this._classActivator;}
 
-    set pointer (index_) { if (this.hasNo(this._pointer)) {this._pointer = index_} }
-    get pointer () { return this._pointer }
+    set pointer (index_) {
+        if (this.hasNo(this._pointer)) {
+            this._pointer = index_;
+        }
+    }
+    get pointer () {return this._pointer;}
 
-    set size (number_) { this._size = this.slides.length }
+    set size (number_) {this._size = this.slides.length;}
     get size () {
         this._size = this.slides.length;
-        return this._size
+        return this._size;
     }
 
     set activeSlide (number_) {
@@ -155,7 +168,7 @@ class SliderSet {
     }
     get activeSlide () {
         this._activeSlide = this.slides[this.pointer];
-        return this._activeSlide
+        return this._activeSlide;
     }
 
     activateCurrentSlide() {
@@ -179,22 +192,21 @@ class SliderSet {
     }
 
     activateNextSlide() {
-        this.deactivateCurrentSlide()
-        if (++this._pointer === this.size) {this._pointer = 0}
+        this.deactivateCurrentSlide();
+        if (++this._pointer === this.size) {
+            this._pointer = 0
+        }
         this.activateCurrentSlide();
         return this.slides[this._pointer];
     }
 
     getSlider() {
-        return  document.querySelector( // 'div.slider div.slider__items'
+        return  document.querySelector(
             'div.' + this.classes.className +
             ' div.' + this.classes.itemsClass);
     }
 
-    gatherSlides() {
-        return this.getSlider().querySelectorAll(
-            'div.' + this.classes.itemClass); // + ' img.' + this.classes.imgClass);
-    }
+    gatherSlides() {return this.getSlider().querySelectorAll('div.' + this.classes.itemClass);}
 }
 
 
