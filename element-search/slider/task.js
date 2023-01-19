@@ -58,31 +58,29 @@ class SimpleNavigator {
     }
 
     setMouseHandlers() {
-        let handlers = {objInterval: 0, currentInterval: 0, sliderInterval: 222};
-        handlers.interval = function () {
-            let interval = this.handlers.mouse.currentInterval ? 0 : this.handlers.mouse.sliderInterval;
-            this.handlers.mouse.currentInterval = this.handlers.mouse.sliderInterval;
-            return interval;
-        }.bind(this);
-        handlers.doProcessButtons = function (button) {
-            if (button.className.includes(this.classes.buttonClasses.preClass)) {
-                this.sliderSet.activatePreSlide();}
-            if (button.className.includes(this.classes.buttonClasses.nextClass)) {
-                this.sliderSet.activateNextSlide();}
-        }.bind(this);
-        handlers.mousedownHandler = function (event) {
-            handlers.objInterval =  setInterval(() => {
-                handlers.doProcessButtons(event.target);
-                if (event.target.className.includes(this.classes.buttonClasses.preClass)) {
-                    this.sliderSet.activatePreSlide();}
-                if (event.target.className.includes(this.classes.buttonClasses.nextClass)) {
-                    this.sliderSet.activateNextSlide();}
-                },  this.handlers.mouse.interval());
-        }.bind(this);
-        handlers.mouseupHandler = function (event) {
-            clearInterval(this.handlers.mouse.objInterval);
-            this.handlers.mouse.currentInterval = 0;
-        }.bind(this);
+        let handlers = {intervalID: 0};
+
+        handlers.mousedownHandler = function (event, startDelay = 4, pressDelay = 777) {
+            let action = event.target.className.includes(this.classes.buttonClasses.preClass)
+                ? this.sliderSet.activatePreSlide.bind(this.sliderSet)
+                : this.sliderSet.activateNextSlide.bind(this.sliderSet);
+            let currentDelay = startDelay;
+            let start = new Date().getTime();
+
+            this.handlers.mouse.intervalID =  setInterval(() => {
+                // action();  //       В две строки не получается: слишком быстро
+                // currentDelay = pressDelay;  //   смена кадров при зажатой кнопке мыши, не отрегулируешь...
+                if (new Date().getTime() - start < currentDelay) {
+                    currentDelay = pressDelay + start - new Date().getTime();
+                } else {
+                    action();
+                    currentDelay = pressDelay;
+                    start = new Date().getTime();
+                }},  currentDelay);
+        }.bind(this)
+
+        handlers.mouseupHandler = function (event) { clearInterval(this.handlers.mouse.intervalID); }.bind(this);
+
         return handlers;
     }
 
@@ -99,14 +97,14 @@ class SimpleNavigator {
     }
 
     start() {this.setMouseEventHandlers();}
-    exit() {this.delMouseEventHandlers();}
+    stop() {this.delMouseEventHandlers();}
 }
 
 // ============================================================     Navigator: в разработке!
 
 class Navigator extends SimpleNavigator{
     constructor(navigatorClasses, sliderSet = new SliderSet()) {
-        super(navigatorClasses, sliderSet = new SliderSet());
+        super(navigatorClasses, sliderSet);
         console.log(`Создан навигатор с объектом "Точки": ${this.dots}`);
     }
 }
@@ -139,13 +137,13 @@ class SliderSet {
         }
     }
 
-    activatePreSlide() {
+    activatePreSlide() {  //            в 3 строки
         this.deactivateCurrentSlide()
         this._pointer = --this._pointer < 0 ? this.slides.length -1 : this.pointer;
         this.activateCurrentSlide();
     }
 
-    activateNextSlide() {
+    activateNextSlide() {  //            в 3 строки
         this.deactivateCurrentSlide();
         this._pointer = ++this._pointer === this.slides.length ? 0 : this.pointer;
         this.activateCurrentSlide();
@@ -156,8 +154,8 @@ class SliderSet {
     gatherSlides() {return this.getSlider().querySelectorAll('div.' + this.classes.itemClass);}
 }
 
+// ================================================================     СТАРТ:
 
 let slider = new Slider();
 slider.navigator.start();
-
 
