@@ -4,7 +4,6 @@
 class Slider {
     /**
      * Слайдер
-     * @param navigationClasses: Классы управляющих элементов слайдера
      * @param slidesClasses: Классы слайдера
      * @param navigationClasses: Классы навигатора
      * @param arrows: Стрелки - управляющий элемент слайдера, подкл/откл
@@ -142,6 +141,7 @@ class Slider {
                     start = new Date().getTime();
                 }},  currentDelay);
         }.bind(this);
+
         return handlers;
     }
 
