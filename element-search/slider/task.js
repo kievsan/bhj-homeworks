@@ -156,24 +156,24 @@ class Slider {
 
     setMouseEventHandlers() {
         if (this.arrows) {
-            for (let button of this.gatherArrowButtons()) {
+            for (let button of this.arrows) {
                 button.addEventListener('mousedown', this.handlers.mouse.arrows.mousedownHandler);
                 button.addEventListener('mouseup', this.handlers.mouse.arrows.mouseupHandler);}
         }
         if (this.dots) {
-            for (let button of this.gatherDotButtons()) {
+            for (let button of this.dots) {
                 button.addEventListener('click', this.handlers.mouse.dots.clickHandler); }
         }
     }
 
     delMouseEventHandlers() {
         if (this.arrows) {
-            for (let button of this.gatherArrowButtons()) {
+            for (let button of this.arrows) {
                 button.removeEventListener('mousedown', this.handlers.mouse.arrows.mousedownHandler);
                 button.removeEventListener('mouseup', this.handlers.mouse.arrows.mouseupHandler); }
         }
         if (this.dots) {
-            for (let button of this.gatherDotButtons()) {
+            for (let button of this.dots) {
                 button.removeEventListener('click', this.handlers.mouse.dots.clickHandler); }
         }
     }
