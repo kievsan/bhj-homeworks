@@ -9,10 +9,13 @@ let getMenuItems = (menu) => menu.querySelectorAll('li.menu__item a.menu__link')
 let getSubmenu = (menu) => menu.parentNode.querySelector('ul.menu_sub');
 
 function activateSubMenu(menu) {
-    if (getSubmenu(menu) !== activatedSubMenu) {
-        deactivateSubMenu(menu);
+    if (getSubmenu(menu) === activatedSubMenu) {
+        deactivateSubMenu();
+    } else {
+        deactivateSubMenu();
         activatedSubMenu = getSubmenu(menu);
-        activatedSubMenu.classList.add((activation)); }
+        activatedSubMenu.classList.add((activation));
+    }
 }
 
 function deactivateSubMenu() {
