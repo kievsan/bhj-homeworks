@@ -1,30 +1,37 @@
+// Домашнее задание к занятию 1.2 «Способы поиска нужного HTML-элемента».
 // Задание 2. Навигационное меню.
 
-let mainMenu, activatedMenu;
+let activatedSubMenu;
+let mainMenu = document.querySelector('ul.menu_main');
+let activation = 'menu_active';
 
-mainMenu = document.querySelector('ul.menu_main');
+let getMenuItems = (menu) => menu.querySelectorAll('li.menu__item a.menu__link');
+let getSubmenu = (menu) => menu.parentNode.querySelector('ul.menu_sub');
 
-function getMenuItems(menu) {
-    return menu.querySelectorAll('li.menu__item a.menu__link');
+function activateSubMenu(menu) {
+    if (getSubmenu(menu) !== activatedSubMenu) {
+        deactivateSubMenu(menu);
+        activatedSubMenu = getSubmenu(menu);
+        activatedSubMenu.classList.add((activation)); }
 }
 
-function getSubmenu(menu) {
-    return menu.parentNode.querySelector('ul.menu_sub');
+function deactivateSubMenu() {
+    if (activatedSubMenu) {
+        activatedSubMenu.classList.remove((activation)); }
+    activatedSubMenu = null;
 }
 
-function setEventHandlers(menu, ctrlEvent = 'click', activation = 'menu_active') {
-    let printMsg = (targetText) => console.log('Кликнули по "', targetText, '"');
-    let menuItemHandler = (event) => printMsg(event.target.text);
+function setEventHandlers(menu, ctrlEvent = 'click') {
+    let menuItemHandler = (event) => deactivateSubMenu();
     let submenuItemHandler = (event) => {
-        printMsg(event.target.text);
-        getSubmenu(event.target).classList.add(activation); // активировать подменю (submenu.className += '' + activate)
-        return false; // блокировать действие браузера по умолчанию
+        activateSubMenu(event.target);   // активировать подменю
+        event.preventDefault();         // блокировать действие браузера по умолчанию
     }
     for (let menu_item of getMenuItems(mainMenu)) {
         if (getSubmenu(menu_item)) {
             menu_item.addEventListener(ctrlEvent, submenuItemHandler);
         } else {
-            menu_item.addEventListener(ctrlEvent, menuItemHandler);}
+            menu_item.addEventListener(ctrlEvent, menuItemHandler); }
     }
 }
 
