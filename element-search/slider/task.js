@@ -18,56 +18,77 @@ class Slider {
                     classActivator: 'slider__item_active'
                 },
                 navigatorClasses = {
-                    className: 'slider__navigation',
-                    buttonClasses: {
+                    arrowClasses: {
+                        className: 'slider__navigation',
                         itemsClass: 'slider__arrows',
                         itemClass: 'slider__arrow',
                         preClass: 'slider__arrow_prev',
                         nextClass: 'slider__arrow_next'
                     },
                     dotClasses: {
-                        itemsClass: 'slider__dots',
-                        itemClass: 'slider__dot'
-                    }}) {
+                        className: 'slider__dots',
+                        itemClass: 'slider__dot',
+                        classActivator: 'slider__dot_active'
+                    }
+                }
+    ) {
         this.slider = new SliderSet(sliderClasses);
-        this.navigator = new SimpleNavigator(navigatorClasses, this.slider);
+        this.arrows = new Navigator(navigatorClasses, this.slider, true, false);
+        this.dots = new Navigator(navigatorClasses, this.slider, false);
+        this.advanced = new Navigator(navigatorClasses, this.slider);
     }
 }
 
-// ============================================================     SimpleNavigator:
+// ============================================================     Navigator:
 
-class SimpleNavigator {
-    constructor(navigatorClasses, sliderSet = new SliderSet()) {
+class Navigator {
+    /**
+     * Навигатор Слайдера
+     * @param navigatorClasses: Классы управляющих элементов слайдера
+     * @param sliderSet: Хранилище слайдеров
+     * @param arrows: Стрелки - управляющий элемент слайдера, подкл/откл
+     * true - по умолчанию
+     * @param dots: Точки - управляющий элемент слайдера, подкл/откл
+     * true - по умолчанию
+     */
+    constructor(navigatorClasses, sliderSet, arrows = true, dots = true) {
         this.classes = navigatorClasses;
         this.sliderSet = sliderSet;
         this.handlers = null;
+        this.hasArrows = arrows;
+        this.dots = dots ? new DotsSet(navigatorClasses.dotClasses, sliderSet) : null;
     }
 
     set handlers (obj) {
         if (this.hasNo(obj)) {
-            this._handlers = {mouse: this.setMouseHandlers()};
+            // this._handlers = { mouse: this.setMouseHandlersForSliderNavigation() };
+            this._handlers = {};
+            this._handlers.mouse = {
+                arrows: this.setMouseHandlersForSliderNavigation(),
+                dots: this.setMouseHandlersForSliderDots()
+            }
         }
     }
     get handlers () { return this._handlers }
 
     hasNo(value) { return value === undefined || value === null || isNaN(value) }
 
-    gatherButtons() {
-        return document.querySelector('div.' + this.classes.className).querySelectorAll(
-            'div.' + this.classes.buttonClasses.itemsClass + ' div.' + this.classes.buttonClasses.itemClass);
+    gatherArrowButtons() {
+        return document.querySelector('div.' + this.classes.arrowClasses.className).querySelectorAll(
+            'div.' + this.classes.arrowClasses.itemsClass  + ' div.' + this.classes.arrowClasses.itemClass);
     }
 
-    setMouseHandlers() {
+    setMouseHandlersForSliderNavigation() {
         let handlers = {intervalID: 0};
 
-        handlers.mousedownHandler = function (event, startDelay = 4, pressDelay = 777) {
-            let action = event.target.className.includes(this.classes.buttonClasses.preClass)
+        handlers.mousedownHandler = function (event, startDelay = 4, pressDelay = 555) {
+            let action = event.target.className.includes(this.classes.arrowClasses.preClass)
                 ? this.sliderSet.activatePreSlide.bind(this.sliderSet)
                 : this.sliderSet.activateNextSlide.bind(this.sliderSet);
             let currentDelay = startDelay;
             let start = new Date().getTime();
 
-            this.handlers.mouse.intervalID =  setInterval(() => {
+            this.handlers.mouse.arrows.intervalID =  setInterval(() => {
                 // action();  //       В две строки не получается: слишком быстро
                 // currentDelay = pressDelay;  //   смена кадров при зажатой кнопке мыши, не отрегулируешь...
                 if (new Date().getTime() - start < currentDelay) {
@@ -79,34 +100,91 @@ class SimpleNavigator {
                 }},  currentDelay);
         }.bind(this)
 
-        handlers.mouseupHandler = function (event) { clearInterval(this.handlers.mouse.intervalID); }.bind(this);
+        handlers.mouseupHandler = function (event) { clearInterval(this.handlers.mouse.arrows.intervalID); }.bind(this);
 
         return handlers;
     }
 
+    setMouseHandlersForSliderDots() {
+        return  {
+            clickHandler: function (event) {
+                let newPointer = this.dots.arr.indexOf(event.target);
+                if (this.dots.getPointer() !== newPointer) {
+                    this.dots.deactivateCurrentDot();
+                    this.dots.setPointer(newPointer); }
+            }.bind(this)
+        };
+    }
+
     setMouseEventHandlers() {
-        for (let button of this.gatherButtons()) {
-            button.addEventListener('mousedown', this.handlers.mouse.mousedownHandler);
-            button.addEventListener('mouseup', this.handlers.mouse.mouseupHandler);}
+        if (!this.hasArrows && !this.dots) {
+            this.hasArrows = true;
+            this.hasDots = true;
+        }
+        if (this.hasArrows) {
+            for (let button of this.gatherArrowButtons()) {
+                button.addEventListener('mousedown', this.handlers.mouse.arrows.mousedownHandler);
+                button.addEventListener('mouseup', this.handlers.mouse.arrows.mouseupHandler);}
+        }
+        if (this.dots) {
+            for (let button of this.dots.gatherDotButtons()) {
+                button.addEventListener('click', this.handlers.mouse.dots.clickHandler); }
+        }
     }
 
     delMouseEventHandlers() {
-        for (let button of this.gatherButtons()) {
-            button.removeEventListener('mousedown', this.handlers.mouse.mousedownHandler);
-            button.removeEventListener('mouseup', this.handlers.mouse.mouseupHandler);}
+        if (this.hasArrows) {
+            for (let button of this.gatherArrowButtons()) {
+                button.removeEventListener('mousedown', this.handlers.mouse.arrows.mousedownHandler);
+                button.removeEventListener('mouseup', this.handlers.mouse.arrows.mouseupHandler);}
+        }
+        if (this.dots) {
+            for (let button of this.dots.gatherDotButtons()) {
+                button.removeEventListener('mousedown', this.handlers.mouse.dots.mousedownHandler);
+                button.removeEventListener('mouseup', this.handlers.mouse.dots.mouseupHandler);}
+        }
     }
 
     start() {this.setMouseEventHandlers();}
     stop() {this.delMouseEventHandlers();}
 }
 
-// ============================================================     Navigator: в разработке!
+// ================================================================     DotsSet:
 
-class Navigator extends SimpleNavigator{
-    constructor(navigatorClasses, sliderSet = new SliderSet()) {
-        super(navigatorClasses, sliderSet);
-        console.log(`Создан навигатор с объектом "Точки": ${this.dots}`);
+class DotsSet {
+    constructor(dotClasses, sliderSet) {
+        this.classes = dotClasses;
+        this.sliderSet = sliderSet;
+        this.arr = Array.from(this.gatherDotButtons());
     }
+
+    setPointer = (index) => {
+        index = ( index ? Math.abs(parseInt(index)) : 0) < this.arr.length ? index : 0;
+        if (index !== this.getPointer()) {
+            this.deactivateCurrentDot();
+            this.sliderSet.pointer = index;
+            this.activateCurrentDot(); }
+    }
+    getPointer = () => this.sliderSet.pointer;
+
+    getActiveSlide = () => this.sliderSet.activeSlide();
+
+    gatherDotButtons() {
+        return document.querySelector('div.' + this.classes.className).querySelectorAll(
+            'div.' + this.classes.itemClass);
+    }
+
+    activeDot = () => this.arr[this.getPointer()];
+
+    activateCurrentDot() {
+        if (!this.activeDot().className.includes(this.classes.classActivator)) {
+        this.activeDot().classList.add(this.classes.classActivator); }
+    };
+
+    deactivateCurrentDot() {
+        if (this.activeDot().className.includes(this.classes.classActivator)) {
+            this.activeDot().classList.remove(this.classes.classActivator); }
+    };
 }
 
 // ================================================================     SliderSet:
@@ -118,32 +196,39 @@ class SliderSet {
         this.pointer = 0;
     }
 
-    set pointer (index_) {this._pointer = (this.hasNo(this._pointer)) ? index_ : this._pointer;}
-    get pointer () {return this._pointer;}
+    set pointer (index) {
+        if (this._pointer === undefined) {
+            this._pointer = 0
+        } else {
+            index = index ? Math.abs(parseInt(index)) : 0;
+            index = index < this.slides.length ? index : 0;
+            if (index !== this._pointer) {
+                this.deactivateCurrentSlide();
+                this._pointer = index;
+                this.activateCurrentSlide(); }
+        }
+    }
+    get pointer () { return this._pointer; }
 
-    hasNo(value) { return value === undefined || value === null || isNaN(value) }
-
-    activeSlide () {return this.slides[this.pointer];}
+    activeSlide () { return this.slides[this.pointer]; }
 
     activateCurrentSlide() {
         if (!this.activeSlide().className.includes(this.classes.classActivator)) {
-            this.activeSlide().classList.add(this.classes.classActivator);
-        }
+            this.activeSlide().classList.add(this.classes.classActivator); }
     }
 
     deactivateCurrentSlide() {
         if (this.activeSlide().className.includes(this.classes.classActivator)) {
-            this.activeSlide().classList.remove(this.classes.classActivator);
-        }
+            this.activeSlide().classList.remove(this.classes.classActivator); }
     }
 
-    activatePreSlide() {  //            в 3 строки
+    activatePreSlide() {
         this.deactivateCurrentSlide()
         this._pointer = --this._pointer < 0 ? this.slides.length -1 : this.pointer;
         this.activateCurrentSlide();
     }
 
-    activateNextSlide() {  //            в 3 строки
+    activateNextSlide() {
         this.deactivateCurrentSlide();
         this._pointer = ++this._pointer === this.slides.length ? 0 : this.pointer;
         this.activateCurrentSlide();
@@ -157,5 +242,5 @@ class SliderSet {
 // ================================================================     СТАРТ:
 
 let slider = new Slider();
-slider.navigator.start();
+slider.advanced.start();
 
