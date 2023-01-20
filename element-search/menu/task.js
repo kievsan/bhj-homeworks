@@ -20,8 +20,8 @@ function activateSubMenu(menu) {
 
 function deactivateSubMenu() {
     if (activatedSubMenu) {
-        activatedSubMenu.classList.remove((activation)); }
-    activatedSubMenu = null;
+        activatedSubMenu.classList.remove((activation));
+        activatedSubMenu = null; }
 }
 
 function setEventHandlers(menu, ctrlEvent = 'click') {
