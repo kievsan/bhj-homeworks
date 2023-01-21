@@ -2,11 +2,14 @@
 // Задание 2. Навигационное меню.
 
 let activatedSubMenu;
-let mainMenu = document.querySelector('ul.menu_main');
 let activation = 'menu_active';
+let subMenuClass = 'menu_sub';
+let mainMenuSelector = 'ul.menu_main';
+let mainMenu = document.querySelector(mainMenuSelector);
 
 let getMenuItems = (menu) => menu.querySelectorAll('li.menu__item a.menu__link');
-let getSubmenu = (menu) => menu.parentNode.querySelector('ul.menu_sub');
+let getSubmenu = (menu) => menu.parentNode.querySelector(`ul.${subMenuClass}`);
+let getActiveSubmenus = (menu = mainMenu) => menu.querySelectorAll(`.${activation}`);
 
 function activateSubMenu(menu) {
     if (getSubmenu(menu) === activatedSubMenu) {
@@ -25,10 +28,17 @@ function deactivateSubMenu() {
 }
 
 function setEventHandlers(menu, ctrlEvent = 'click') {
-    let menuItemHandler = (event) => deactivateSubMenu();
+    let menuItemHandler = () => deactivateSubMenu();
     let submenuItemHandler = (event) => {
         activateSubMenu(event.target);   // активировать подменю
         event.preventDefault();         // блокировать действие браузера по умолчанию
+    }
+    let deactivateSubMenus = (event) => {
+        if (!activatedSubMenu || event.target.closest(mainMenuSelector)) {
+            return }  // Нет активного субменю, кликнутая цель не принадлежит меню
+        activatedSubMenu = null;
+        for (let subMenu of getActiveSubmenus()) {
+            subMenu.classList.remove((activation)); }  // деактивация
     }
     for (let menu_item of getMenuItems(mainMenu)) {
         if (getSubmenu(menu_item)) {
@@ -36,6 +46,7 @@ function setEventHandlers(menu, ctrlEvent = 'click') {
         } else {
             menu_item.addEventListener(ctrlEvent, menuItemHandler); }
     }
+    document.addEventListener(ctrlEvent, deactivateSubMenus);
 }
 
 
