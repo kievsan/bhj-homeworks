@@ -38,7 +38,7 @@ function setEventHandlers(menu, ctrlEvent = 'click') {
             return }  // Нет активного субменю, кликнутая цель не принадлежит меню
         activatedSubMenu = null;
         for (let subMenu of getActiveSubmenus()) {
-            subMenu.classList.remove((activation)); }  // деактивация
+            subMenu.classList.remove((activation)); }  // деактивация всех активных подменю
     }
     for (let menu_item of getMenuItems(mainMenu)) {
         if (getSubmenu(menu_item)) {
