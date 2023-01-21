@@ -13,7 +13,7 @@ let getActiveSubmenus = (menu = mainMenu) => menu.querySelectorAll(`.${activatio
 
 function activateSubMenu(menu) {
     if (getSubmenu(menu) === activatedSubMenu) {
-        deactivateSubMenu();
+        deactivateSubMenu(); // повторный клик закрывает подменю
     } else {
         deactivateSubMenu();
         activatedSubMenu = getSubmenu(menu);
@@ -35,10 +35,10 @@ function setEventHandlers(menu, ctrlEvent = 'click') {
     }
     let deactivateSubMenus = (event) => {
         if (!activatedSubMenu || event.target.closest(mainMenuSelector)) {
-            return }  // Нет активного субменю, кликнутая цель не принадлежит меню
+            return }  // Нет открытого субменю, кликнутая цель не принадлежит меню
         activatedSubMenu = null;
         for (let subMenu of getActiveSubmenus()) {
-            subMenu.classList.remove((activation)); }  // деактивация всех активных подменю
+            subMenu.classList.remove((activation)); }  // закрытие всех активных подменю
     }
     for (let menu_item of getMenuItems(mainMenu)) {
         if (getSubmenu(menu_item)) {
