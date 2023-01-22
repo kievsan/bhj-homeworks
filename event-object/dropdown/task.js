@@ -21,6 +21,7 @@ let getDropdownsAround = (container) => container.querySelectorAll(`div.${dropdo
 /**
  * Задаёт обработчики событий в конкретном контейнере
  * @param myContainer: контейнер для целей событий
+ * (делегирование событий: перехват всплывающих в этом контейнере)
  * @returns {{}} объект с обработчиками событий
  */
 function setEventHandlers(myContainer) {
