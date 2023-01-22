@@ -9,10 +9,9 @@ const dropdownSet = {
     itemClass: 'dropdown__item'
 }
 
-let myDropdownContainer = document.querySelector(`body>main`);
+let myDropdownContainer = document.querySelector(`body>main.content`);
 let handlers = {mouse: setEventHandlers(myDropdownContainer)};
 
-// let getDropdown = (target) => target.closest(dropdownSet.).querySelector(`.${dropdownSet.className}`);
 let getDropdownList = (dropdown) => dropdown.querySelector(`.${dropdownSet.className}`);
 let getDropdownValue = (dropdown) => dropdown.querySelector(`.${dropdownSet.valueClass}`);
 
@@ -21,13 +20,13 @@ let getDropdownsAround = (container) => container.querySelectorAll(`div.${dropdo
 
 function setEventHandlers(myContainer) {
     let handlers = {};
-    let deactivateDropdownsFrom = function (target, container) {
+    let deactivateDropdowns = function (container, target) {
         for (let dropdown of getDropdownsAround(container)) {
             if (!getDropdownValue(dropdown).contains(target)) {
                 if (getDropdownList(dropdown).className.includes(dropdownSet.activation)) {
                     getDropdownList(dropdown).classList.remove(dropdownSet.activation); }}}
     }
-    let activateDropdown = function (event, container) {
+    let activateDropdown = function (container, event) {
         let currentDropdown;
         for (let dropdown of getDropdownsAround(container)) {
             if (dropdown.contains(event.target)) {
@@ -38,21 +37,23 @@ function setEventHandlers(myContainer) {
     }
 
     handlers.clickDropdownHandler = function (event) {
-        // deactivateDropdownsFrom(event.target, myContainer);
-        if (event.target.className.includes(dropdownSet.valueClass)) {
-            activateDropdown(event, myContainer); }
+        let item = event.target;
+        if (item.tagName === 'DIV' && item.className.includes(dropdownSet.valueClass)) {
+            activateDropdown(myContainer, event); }
     }.bind(this);
 
     handlers.clickDropdownItemHandler = function (event) {
-        let item = event.target.closest(`a.${dropdownSet.itemClass}`);
-        if (item && item.className.includes(dropdownSet.itemClass))  {
-            event.preventDefault();       // блокировать действие браузера по умолчанию
-            console.log(event.target.className);
-            item.textContent = event.target.textContent; }
+        let item = event.target;
+        if (item.tagName === 'A' && item.className.includes(dropdownSet.itemClass)) {
+            console.log(item.className);
+            let myDropdown = item.closest(`div.${dropdownSet.containerClass}`);
+            getDropdownValue(myDropdown).textContent = item.textContent;
+            event.preventDefault();      // блокировать действие браузера по умолчанию
+        }
     }.bind(this);
 
     handlers.clickAnyHandler = function (event) {
-        deactivateDropdownsFrom(event.target, myContainer);
+        deactivateDropdowns(myContainer, event.target);
     }.bind(this);
 
     return handlers;
@@ -61,7 +62,7 @@ function setEventHandlers(myContainer) {
 function start(ctrlEvent = 'click', ) {
     myDropdownContainer.addEventListener(ctrlEvent, handlers.mouse.clickDropdownHandler);
     myDropdownContainer.addEventListener(ctrlEvent, handlers.mouse.clickDropdownItemHandler);
-    document.addEventListener(ctrlEvent, handlers.mouse.clickAnyHandler);
+    document.addEventListener(ctrlEvent, handlers.mouse.clickAnyHandler, {passive: true});
 }
 
 function stop(ctrlEvent = 'click', ) {
