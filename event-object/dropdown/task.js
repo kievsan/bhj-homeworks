@@ -37,8 +37,8 @@ function setEventHandlers(myContainer) {
     }
 
     handlers.clickDropdownHandler = function (event) {
-        let item = event.target;
-        if (item.tagName === 'DIV' && item.className.includes(dropdownSet.valueClass)) {
+        let value = event.target;
+        if (value.tagName === 'DIV' && value.className.includes(dropdownSet.valueClass)) {
             activateDropdown(myContainer, event); }
     }.bind(this);
 
