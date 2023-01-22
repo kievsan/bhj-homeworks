@@ -48,7 +48,7 @@ function setEventHandlers(myContainer) {
             console.log(item.className);
             let myDropdown = item.closest(`div.${dropdownSet.containerClass}`);
             getDropdownValue(myDropdown).textContent = item.textContent;
-            event.preventDefault();      // блокировать действие браузера по умолчанию
+            event.preventDefault();      // блокировать действие браузера по умолчанию: НЕ РАБОТАЕТ! ???
         }
     }.bind(this);
 
