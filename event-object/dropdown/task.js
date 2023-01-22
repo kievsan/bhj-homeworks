@@ -38,17 +38,16 @@ function setEventHandlers(myContainer) {
 
     handlers.clickDropdownHandler = function (event) {
         let value = event.target;
-        if (value.tagName === 'DIV' && value.className.includes(dropdownSet.valueClass)) {
-            activateDropdown(myContainer, event); }
+        if (value.tagName !== 'DIV' && !value.className.includes(dropdownSet.valueClass)) { return }
+        activateDropdown(myContainer, event);
     }
 
     handlers.clickDropdownItemHandler = function (event) {
         let item = event.target;
-        if (item.tagName === 'A' && item.className.includes(dropdownSet.itemClass)) {
-            let myDropdown = item.closest(`div.${dropdownSet.containerClass}`);
-            getDropdownValue(myDropdown).textContent = item.textContent;
-            event.preventDefault();      // блокировать действие браузера по умолчанию: НЕ РАБОТАЕТ! ???
-        }
+        if (item.tagName !== 'A' && !item.className.includes(dropdownSet.itemClass)) { return }
+        let myDropdown = item.closest(`div.${dropdownSet.containerClass}`);
+        getDropdownValue(myDropdown).textContent = item.textContent;
+        event.preventDefault();      // блокировать действие браузера по умолчанию
     }
 
     handlers.clickAnyHandler = function (event) {
