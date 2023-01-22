@@ -18,6 +18,11 @@ let getDropdownValue = (dropdown) => dropdown.querySelector(`.${dropdownSet.valu
 // все dropdown в нужном родительском контейнере
 let getDropdownsAround = (container) => container.querySelectorAll(`div.${dropdownSet.containerClass}`);
 
+/**
+ * Задаёт обработчики событий в конкретном контейнере
+ * @param myContainer: контейнер для целей событий
+ * @returns {{}} объект с обработчиками событий
+ */
 function setEventHandlers(myContainer) {
     let handlers = {};
     let deactivateDropdowns = function (container, target) {
