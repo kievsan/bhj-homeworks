@@ -10,16 +10,22 @@ const dropdownSet = {
 }
 
 let myDropdownContainer = document.querySelector(`body>main`);
-// let myDropdown = myDropdownContainer.querySelector(`div.card>div.${dropdownSet.containerClass}:first-child`);
+let handlers = {mouse: setEventHandlers(myDropdownContainer)};
 
-// все dropdown в нужном родительском контейнере для моего dropdown
+// let getDropdown = (target) => target.closest(dropdownSet.).querySelector(`.${dropdownSet.className}`);
+let getDropdownList = (dropdown) => dropdown.querySelector(`.${dropdownSet.className}`);
+let getDropdownValue = (dropdown) => dropdown.querySelector(`.${dropdownSet.valueClass}`);
+
+// все dropdown в нужном родительском контейнере
 let getDropdownsAround = (container) => container.querySelectorAll(`div.${dropdownSet.containerClass}`);
 
-function setEventHandlers(ctrlEvent = 'click', myContainer = myDropdownContainer) {
-    let deactivateDropdownsFrom = function (container) {
+function setEventHandlers(myContainer) {
+    let handlers = {};
+    let deactivateDropdownsFrom = function (target, container) {
         for (let dropdown of getDropdownsAround(container)) {
-            if (dropdown.className.includes(dropdownSet.activation)) {
-                dropdown.classList.remove(dropdownSet.activation); }}
+            if (!getDropdownValue(dropdown).contains(target)) {
+                if (getDropdownList(dropdown).className.includes(dropdownSet.activation)) {
+                    getDropdownList(dropdown).classList.remove(dropdownSet.activation); }}}
     }
     let activateDropdown = function (event, container) {
         let currentDropdown;
@@ -27,25 +33,41 @@ function setEventHandlers(ctrlEvent = 'click', myContainer = myDropdownContainer
             if (dropdown.contains(event.target)) {
                 currentDropdown = dropdown;
                 break; }}
-        if (!currentDropdown) {
-            return }
-        let dropdownList = currentDropdown.querySelector(`.${dropdownSet.className}`);
-        let dropdownValue = currentDropdown.querySelector(`.${dropdownSet.valueClass}`);
-        if (dropdownValue.contains(event.target)) {
-            dropdownList.classList.add(dropdownSet.activation);
-            if (dropdownList.contains(event.target)) {
-                dropdownValue.textContent = event.target.textContent;
-            }
-        }
-
+        if (currentDropdown && getDropdownValue(currentDropdown).contains(event.target)) {
+            getDropdownList(currentDropdown).classList.add(dropdownSet.activation); }
     }
 
-    let mouseClickDropdownHandler = function (event) {
-        deactivateDropdownsFrom(myContainer);
-        activateDropdown(event, myContainer);
+    handlers.clickDropdownHandler = function (event) {
+        // deactivateDropdownsFrom(event.target, myContainer);
+        if (event.target.className.includes(dropdownSet.valueClass)) {
+            activateDropdown(event, myContainer); }
     }.bind(this);
 
-    myContainer.addEventListener(ctrlEvent, mouseClickDropdownHandler);
+    handlers.clickDropdownItemHandler = function (event) {
+        let item = event.target.closest(`a.${dropdownSet.itemClass}`);
+        if (item && item.className.includes(dropdownSet.itemClass))  {
+            event.preventDefault();       // блокировать действие браузера по умолчанию
+            console.log(event.target.className);
+            item.textContent = event.target.textContent; }
+    }.bind(this);
+
+    handlers.clickAnyHandler = function (event) {
+        deactivateDropdownsFrom(event.target, myContainer);
+    }.bind(this);
+
+    return handlers;
 }
 
-setEventHandlers()
+function start(ctrlEvent = 'click', ) {
+    myDropdownContainer.addEventListener(ctrlEvent, handlers.mouse.clickDropdownHandler);
+    myDropdownContainer.addEventListener(ctrlEvent, handlers.mouse.clickDropdownItemHandler);
+    document.addEventListener(ctrlEvent, handlers.mouse.clickAnyHandler);
+}
+
+function stop(ctrlEvent = 'click', ) {
+    myDropdownContainer.removeEventListener(ctrlEvent, handlers.mouse.clickDropdownHandler);
+    myDropdownContainer.removeEventListener(ctrlEvent, handlers.mouse.clickDropdownItemHandler);
+    document.removeEventListener(ctrlEvent, handlers.mouse.clickAnyHandler);
+}
+
+start();
