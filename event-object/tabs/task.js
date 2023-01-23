@@ -16,6 +16,9 @@ let containerClass = (container, className) => container.querySelector(`.${class
 
 function setTabsEventHandlers() {
     let handlers = {};
+    handlers.click = function (event) {
+        
+    }.bind(this);
     /*
       TODO:
      */
@@ -32,12 +35,14 @@ function setEventHandlers() {
 }
 
 function startHandlers() {
+    document.addEventListener('click', myHandlers.mouse.tabs.click, {passive: true});
     /*
       TODO:
      */
 }
 
 function stopHandlers() {
+    document.removeEventListener('click', myHandlers.mouse.tabs.click);
     /*
       TODO:
      */
