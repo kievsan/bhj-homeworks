@@ -43,35 +43,23 @@ function setTabsEventHandlers() {
 
         deactivateContent();
         activateContent();
-
     }.bind(this);
-    /*
-      TODO:
-     */
+
     return handlers;
 }
 
 function setEventHandlers() {
     let handlers = {};
     handlers.mouse.tabs = setTabsEventHandlers();
-    /*
-      TODO:
-     */
     return handlers;
 }
 
 function startHandlers() {
     document.addEventListener('click', myHandlers.mouse.tabs.click, {passive: true});
-    /*
-      TODO:
-     */
 }
 
 function stopHandlers() {
     document.removeEventListener('click', myHandlers.mouse.tabs.click);
-    /*
-      TODO:
-     */
 }
 
 function start() {
