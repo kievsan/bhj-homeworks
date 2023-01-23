@@ -56,11 +56,12 @@ class Game {
       При неправильном вводе символа - this.fail();
       DOM-элемент текущего символа находится в свойстве this.currentSymbol.
      */
+    // Всё, что добавлено мной вне этой функции - для работы таймера,
+    // но без него - это не игра!
+
     this.handlers.keydown = function (event) {
       let pressedSymbol = event.key.toLowerCase();
       let correctSymbol = this.currentSymbol.textContent.toLowerCase();
-
-      // alert(`${pressedSymbol}, ${correctSymbol}, ${pressedSymbol === correctSymbol}`);
       
       let result = pressedSymbol === correctSymbol ? this.success.bind(this) : this.fail.bind(this);
       result();
