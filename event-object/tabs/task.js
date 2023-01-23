@@ -23,8 +23,18 @@ function setTabsEventHandlers() {
         let tabs = navigation.querySelectorAll(`.${tabsClasses.navigationItem}`);
         let contents = container.querySelector(`.${tabsClasses.contents}`);
         let texts = contents.querySelectorAll(`.${tabsClasses.contentItem}`);
-        let activeTab = () => tabs.querySelector(`.${tabsClasses.tabActivation}`);
-        let activeText = () => texts.querySelector(`.${tabsClasses.contentActivation}`);
+        let activeTab = () => {
+            for (let tab of tabs) {
+                if (tab.className.includes(tabsClasses.tabActivation)) { return tab } }
+            console.log('Ошибка: нет активного TAB!');
+            return undefined;
+        };
+        let activeText = () => {
+            for (let text of texts) {
+                if (text.className.includes(tabsClasses.contentActivation)) { return text } }
+            console.log('Ошибка: нет активного TEXT!');
+            return undefined;
+        }
         let activateContent = () => {
             if (!event.target.className.includes(tabsClasses.tabActivation)) {
                 event.target.classList.add(tabsClasses.tabActivation);
@@ -34,11 +44,11 @@ function setTabsEventHandlers() {
                 texts[index].classList.add(tabsClasses.contentActivation); }
         }
         let deactivateContent = () => {
-            if (activeTab().className.includes(tabsClasses.tabActivation)) {
-                activeTab().classList.remove(tabsClasses.tabActivation);
+            if (activeTab()?.className.includes(tabsClasses.tabActivation)) {
+                activeTab()?.classList.remove(tabsClasses.tabActivation);
             }
-            if (activeText().className.includes(tabsClasses.contentActivation)) {
-                activeText().classList.remove(tabsClasses.contentActivation); }
+            if (activeText()?.className.includes(tabsClasses.contentActivation)) {
+                activeText()?.classList.remove(tabsClasses.contentActivation); }
         }
 
         deactivateContent();
