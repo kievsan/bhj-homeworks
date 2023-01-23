@@ -16,8 +16,34 @@ let containerClass = (container, className) => container.querySelector(`.${class
 
 function setTabsEventHandlers() {
     let handlers = {};
+
     handlers.click = function (event) {
-        
+        let container = event.target.closest(`.${tabsClasses.containerClass}`);
+        let navigation = event.target.closest(`.${tabsClasses.navigation}`);
+        let tabs = navigation.querySelectorAll(`.${tabsClasses.navigationItem}`);
+        let contents = container.querySelector(`.${tabsClasses.contents}`);
+        let texts = contents.querySelectorAll(`.${tabsClasses.contentItem}`);
+        let activeTab = () => tabs.querySelector(`.${tabsClasses.tabActivation}`);
+        let activeText = () => texts.querySelector(`.${tabsClasses.contentActivation}`);
+        let activateContent = () => {
+            if (!event.target.className.includes(tabsClasses.tabActivation)) {
+                event.target.classList.add(tabsClasses.tabActivation);
+            }
+            let index = [...tabs].indexOf(event.target);
+            if (!texts[index].className.includes(tabsClasses.contentActivation)) {
+                texts[index].classList.add(tabsClasses.contentActivation); }
+        }
+        let deactivateContent = () => {
+            if (activeTab().className.includes(tabsClasses.tabActivation)) {
+                activeTab().classList.remove(tabsClasses.tabActivation);
+            }
+            if (activeText().className.includes(tabsClasses.contentActivation)) {
+                activeText().classList.remove(tabsClasses.contentActivation); }
+        }
+
+        deactivateContent();
+        activateContent();
+
     }.bind(this);
     /*
       TODO:
