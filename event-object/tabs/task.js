@@ -49,7 +49,7 @@ function setTabsEventHandlers() {
 }
 
 function setEventHandlers() {
-    let handlers = {};
+    let handlers = {mouse: {}};
     handlers.mouse.tabs = setTabsEventHandlers();
     return handlers;
 }
