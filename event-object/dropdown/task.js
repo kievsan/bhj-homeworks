@@ -47,7 +47,7 @@ function setEventHandlers(myContainer) {
         let value = event.target;
         if (value.tagName !== 'DIV' && !value.className.includes(dropdownSet.valueClass)) { return }
         activateDropdown(myContainer, event);
-    }
+    }.bind(this);
 
     handlers.clickDropdownItemHandler = function (event) {
         let item = event.target;
@@ -55,11 +55,11 @@ function setEventHandlers(myContainer) {
         let myDropdown = item.closest(`div.${dropdownSet.containerClass}`);
         getDropdownValue(myDropdown).textContent = item.textContent;
         event.preventDefault();      // блокировать действие браузера по умолчанию
-    }
+    }.bind(this);
 
     handlers.clickAnyHandler = function (event) {
         deactivateDropdowns(myContainer, event.target);
-    }
+    }.bind(this);
 
     return handlers;
 }
