@@ -4,16 +4,47 @@ class Game {
     this.wordElement = container.querySelector('.word');
     this.winsElement = container.querySelector('.status__wins');
     this.lossElement = container.querySelector('.status__loss');
+    this.timerElement = document.getElementById('timer');  // добавлено
+    this.handlers = {timerID: 0};  // добавлено
 
-    this.reset();
+    this.registerEvents();  // поменял местами
 
-    this.registerEvents();
+    this.reset();  // поменял местами
   }
 
   reset() {
+    clearInterval(this.handlers.timerID);  // добавлено
+    alert('Начинаем новый раунд!');  // добавлено
+
     this.setNewWord();
     this.winsElement.textContent = 0;
     this.lossElement.textContent = 0;
+
+    this.timerElement.textContent = this.setBackOverTime();  // добавлено
+    document.addEventListener('keydown', this.handlers.keydown);  // добавлено
+    this.timer();  // добавлено
+  }
+
+  timer(startDelay = 4, tickDelay = 2000) {  // добавлено
+    let timerTicks = () => {
+      --this.timerElement.textContent;
+      return parseInt(this.timerElement.textContent);
+    }
+
+    let currentDelay = startDelay;
+    let start = new Date().getTime();
+
+    this.handlers.timerID =  setInterval(() => {
+      if (new Date().getTime() - start < currentDelay) {
+        currentDelay = tickDelay + start - new Date().getTime();
+      } else {
+        let time = timerTicks() + 1;
+        if (!time) {
+          this.fail();
+        }
+        currentDelay = tickDelay;
+        start = new Date().getTime();
+      }},  currentDelay);
   }
 
   registerEvents() {
@@ -25,18 +56,21 @@ class Game {
       При неправильном вводе символа - this.fail();
       DOM-элемент текущего символа находится в свойстве this.currentSymbol.
      */
-    let keydownHandler = function (event) {
+    this.handlers.keydown = function (event) {
       let pressedSymbol = event.key.toLowerCase();
       let correctSymbol = this.currentSymbol.textContent.toLowerCase();
+
+      // alert(`${pressedSymbol}, ${correctSymbol}, ${pressedSymbol === correctSymbol}`);
+      
       let result = pressedSymbol === correctSymbol ? this.success.bind(this) : this.fail.bind(this);
       result();
+
       event.preventDefault();
     }.bind(this)
-
-    document.addEventListener('keydown', keydownHandler);
   }
 
   success() {
+
     if(this.currentSymbol.classList.contains("symbol_current")) this.currentSymbol.classList.remove("symbol_current");
     this.currentSymbol.classList.add('symbol_correct');
     this.currentSymbol = this.currentSymbol.nextElementSibling;
@@ -46,19 +80,31 @@ class Game {
       return;
     }
 
-    if (++this.winsElement.textContent === 10) {
+    document.removeEventListener('keydown', this.handlers.keydown);  // добавлено
+
+    if (++this.winsElement.textContent === 2) {  // 10
       alert('Победа!');
       this.reset();
+    } else {  // добавлено
+      alert('Молодец, так держать!\nНаберите следующее слово на клавиатуре как можно быстрее!');  // добавлено
     }
     this.setNewWord();
+    this.timerElement.textContent = this.setBackOverTime();  // добавлено
+    document.addEventListener('keydown', this.handlers.keydown);  // добавлено
   }
 
   fail() {
-    if (++this.lossElement.textContent === 5) {
+    document.removeEventListener('keydown', this.handlers.keydown);  // добавлено
+
+    if (++this.lossElement.textContent === 2) {  // 5
       alert('Вы проиграли!');
       this.reset();
+    } else {  // добавлено
+      alert('Не айс...\nНаберите следующее слово на клавиатуре как можно быстрее!');  // добавлено
     }
     this.setNewWord();
+    this.timerElement.textContent = this.setBackOverTime();  // добавлено
+    document.addEventListener('keydown', this.handlers.keydown);  // добавлено
   }
 
   setNewWord() {
@@ -66,6 +112,8 @@ class Game {
 
     this.renderWord(word);
   }
+
+  setBackOverTime() { return this.wordElement.querySelectorAll(`.symbol`).length; }  // добавлено
 
   getWord() {
     const words = [
