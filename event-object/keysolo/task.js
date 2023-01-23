@@ -34,7 +34,6 @@ class Game {
     }.bind(this)
 
     document.addEventListener('keydown', keydownHandler);
-    document.addEventListener('keyup', keyupHandler);
   }
 
   success() {
