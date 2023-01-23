@@ -4,10 +4,10 @@
 const tabsClasses = {
     containerClass: 'tabs',
     navigation: 'tab__navigation',
-    navigationItem: 'tab',
+    tab: 'tab',
     tabActivation: 'tab_active',
     contents: 'tab__contents',
-    contentItem: 'tab__content',
+    content: 'tab__content',
     contentActivation: 'tab__content_active'
 }
 let myHandlers = setEventHandlers();
@@ -20,9 +20,9 @@ function setTabsEventHandlers() {
     handlers.click = function (event) {
         let container = event.target.closest(`.${tabsClasses.containerClass}`);
         let navigation = event.target.closest(`.${tabsClasses.navigation}`);
-        let tabs = navigation.querySelectorAll(`.${tabsClasses.navigationItem}`);
+        let tabs = navigation.querySelectorAll(`.${tabsClasses.tab}`);
         let contents = container.querySelector(`.${tabsClasses.contents}`);
-        let texts = contents.querySelectorAll(`.${tabsClasses.contentItem}`);
+        let texts = contents.querySelectorAll(`.${tabsClasses.content}`);
         let activeTab = () => {
             for (let tab of tabs) {
                 if (tab.className.includes(tabsClasses.tabActivation)) { return tab } }
