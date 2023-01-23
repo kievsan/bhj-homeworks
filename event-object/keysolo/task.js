@@ -34,8 +34,8 @@ class Game {
       let pressedSymbol = event.key.toLowerCase();
       let correctSymbol = this.currentSymbol.textContent.toLowerCase();
 
-      let result = pressedSymbol === correctSymbol ? this.success : this.fail;
-      result().bind(this);
+      let result = pressedSymbol === correctSymbol ? this.success.bind(this) : this.fail.bind(this);
+      result();
 
       event.preventDefault();      // блокировать действие браузера по умолчанию
     }.bind(this)
