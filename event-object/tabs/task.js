@@ -26,13 +26,13 @@ function setTabsEventHandlers() {
         let activeTab = () => {
             for (let tab of tabs) {
                 if (tab.className.includes(tabsClasses.tabActivation)) { return tab } }
-            console.log('Ошибка: нет активного TAB!');
+            console.log('Ошибка: нет активного TAB!', tabs);
             return undefined;
         };
         let activeText = () => {
             for (let text of texts) {
                 if (text.className.includes(tabsClasses.contentActivation)) { return text } }
-            console.log('Ошибка: нет активного TEXT!');
+            console.log('Ошибка: нет активного TEXT!', texts);
             return undefined;
         }
         let activateContent = () => {
