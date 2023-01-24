@@ -26,11 +26,6 @@ class Game {
   }
 
   timer(startDelay = 4, tickDelay = 2000) {  // добавлено
-    let timerTicks = () => {
-      --this.timerElement.textContent;
-      return parseInt(this.timerElement.textContent);
-    }
-
     let currentDelay = startDelay;
     let start = new Date().getTime();
 
@@ -38,7 +33,7 @@ class Game {
       if (new Date().getTime() - start < currentDelay) {
         currentDelay = tickDelay + start - new Date().getTime();
       } else {
-        let time = timerTicks() + 1;
+        let time = this.timerElement.textContent--;
         if (!time) {
           this.fail();
         }
