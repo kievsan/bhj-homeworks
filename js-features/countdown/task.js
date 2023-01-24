@@ -19,7 +19,7 @@ class Timer {
         alert('Вы победили в конкурсе');
     }
 
-    simpleTimer(startDelay = 4, tickDelay = 2000) {
+    startSimpleTimer(startDelay = 4, tickDelay = 1000) {
         let currentDelay = startDelay;
         let start = new Date().getTime();
 
@@ -40,4 +40,4 @@ class Timer {
 
 
 let timer = new Timer();
-timer.simpleTimer();
+timer.startSimpleTimer();
