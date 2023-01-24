@@ -31,7 +31,7 @@ function setEventHandlers() {
         let timeoutID = setTimeout(() => {
             cookieSwitch();
             clearTimeout(timeoutID);
-        }, 30);
+        }, 44);
         ++counterHTML.textContent;
         start = new Date().getTime();
     }
