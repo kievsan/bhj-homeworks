@@ -67,7 +67,7 @@ function setEventHandlers() {
 }
 
 function startHandlers() {
-    document.addEventListener('click', myHandlers.mouse.tabs.click);
+    document.addEventListener('click', myHandlers.mouse.tabs.click, {passive: true});
 }
 
 function stopHandlers() {
