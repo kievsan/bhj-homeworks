@@ -17,7 +17,7 @@ let containerClass = (container, className) => container.querySelector(`.${class
 function setTabsEventHandlers() {
     let handlers = {};
 
-    handlers.click = function (event) {
+    handlers.click = (event) => {
         let container = event.target.closest(`.${tabsClasses.containerClass}`);
         let navigation = event.target.closest(`.${tabsClasses.navigation}`);
         let tabs = navigation.querySelectorAll(`.${tabsClasses.tab}`);
@@ -28,7 +28,7 @@ function setTabsEventHandlers() {
                 if (tab.className.includes(tabsClasses.tabActivation)) { return tab } }
             console.log('Ошибка: нет активного TAB!', tabs);
             return undefined;
-        };
+        }
         let activeText = () => {
             for (let text of texts) {
                 if (text.className.includes(tabsClasses.contentActivation)) { return text } }
@@ -53,7 +53,7 @@ function setTabsEventHandlers() {
 
         deactivateContent();
         activateContent();
-    }.bind(this);
+    };
 
     return handlers;
 }
