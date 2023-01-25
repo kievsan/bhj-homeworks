@@ -3,9 +3,20 @@
 
 const cookieHTML = document.getElementById('cookie');
 const counterHTML = document.getElementById('clicker__counter');
+insertHTML();
 const clickRate = document.getElementById('click__rate');
 const maxClickRate = document.getElementById('rating');
 let cookieHandlers = setEventHandlers();
+
+function insertHTML() {
+    let divClickerStatus = document.querySelectorAll('div.clicker__status');
+    divClickerStatus[0].insertAdjacentHTML('afterend',
+        '<div class="clicker__status">Скорость кликов: <span id="click__rate">0</span></div>');
+
+    divClickerStatus = document.querySelectorAll('div.clicker__status');
+    divClickerStatus[1].insertAdjacentHTML('afterend',
+        '<div class="clicker__status">Достигнутая скорость: <span id="rating">0</span></div>');
+}
 
 function setEventHandlers() {
     let handlers = {};
