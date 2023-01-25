@@ -56,8 +56,7 @@ function lose() {
 
 function start() {
     if (!reset()) {
-        stopHandlers();
-    }
+        stopHandlers(); }
 }
 
 const mainContainer = document.querySelector('main.content'),
