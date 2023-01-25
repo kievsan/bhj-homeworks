@@ -18,7 +18,6 @@ function setTabsEventHandlers() {
     let handlers = {};
 
     handlers.click = (event) => {
-        console.log(event.target);
         if (!event.target.classList.contains(tabsClasses.tab)) { return }
 
         let container = event.target.closest(`.${tabsClasses.containerClass}`);
