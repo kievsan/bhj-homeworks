@@ -18,6 +18,9 @@ function setTabsEventHandlers() {
     let handlers = {};
 
     handlers.click = (event) => {
+        console.log(event.target);
+        if (!event.target.classList.contains(tabsClasses.tab)) { return }
+
         let container = event.target.closest(`.${tabsClasses.containerClass}`);
         let navigation = event.target.closest(`.${tabsClasses.navigation}`);
         let tabs = navigation.querySelectorAll(`.${tabsClasses.tab}`);
@@ -65,7 +68,7 @@ function setEventHandlers() {
 }
 
 function startHandlers() {
-    document.addEventListener('click', myHandlers.mouse.tabs.click, {passive: true});
+    document.addEventListener('click', myHandlers.mouse.tabs.click);
 }
 
 function stopHandlers() {
