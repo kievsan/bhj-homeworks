@@ -28,7 +28,7 @@ function rotator(containerSelector = rotatorsContainerSelector) {
 }
 
 function rotator2(containerSelector = rotatorsContainerSelector) {
-    let delay, start, current, rotator, intervalID;
+    let delay, current, rotator, intervalID;
 
     let startRotator = (currentRotator) => {
         rotator = intervalID ? rotator : currentRotator;
