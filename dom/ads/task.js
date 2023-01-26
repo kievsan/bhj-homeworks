@@ -28,17 +28,15 @@ function rotator(containerSelector = rotatorsContainerSelector) {
 }
 
 function rotator2(containerSelector = rotatorsContainerSelector) {
-    let delay, startTime, current, rotator, intervalID;
+    let delay, start, current, rotator, intervalID;
 
     let startRotator = (currentRotator) => {
-        startTime = new Date().getTime();
-
         rotator = intervalID ? rotator : currentRotator;
         current = intervalID ? activateNextItem(rotator) : activeItemOfRotator(rotator);
         intervalID ? clearInterval(intervalID) : current.style.color = current.dataset.color;
 
         delay = current.dataset.speed;
-        delay = correctValue(delay) - (new Date().getTime() - startTime);
+        delay = correctValue(delay);
         delay = delay < 0 ? 0 : delay;
 
         intervalID = setTimeout(startRotator, delay);
