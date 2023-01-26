@@ -2,71 +2,85 @@
 // Задание 2. Ротатор рекламы
 
 
-timerStop = (intervalID) => {
-    clearInterval(intervalID);
-    alert('Вы победили в конкурсе');
+function rotator(containerSelector = rotatorsContainerSelector) {
+    for (let currentRotator of getRotators(containerSelector)) {
+        let delay = 4, current, rotator, intervalID,
+            start = new Date().getTime();
+
+        intervalID = setInterval(() => {
+            if (rotator) {
+                if (new Date().getTime() - start < delay) {
+                    delay = delay - (new Date().getTime() - start);
+                } else {
+                    start = new Date().getTime();
+                    current = activateNextItem(rotator);
+                }
+            } else {
+                rotator = currentRotator;
+                current = activeItemOfRotator(rotator);
+                current.style.color = current.dataset.color;
+            }
+            delay = current.dataset.speed;
+            delay = correctValue(delay);
+            delay = delay < 0 ? 0 : delay;
+        }, delay);
+    }
 }
 
-function startRotator(startDelay = 1000) {
-    startDelay = correctValue(startDelay);
-    let currentDelay = startDelay;
+function rotator2(containerSelector = rotatorsContainerSelector) {
+    let delay, startTime, current, rotator, intervalID;
 
-    let intervalID = setInterval(() => {
-        let startTime = new Date().getTime();
+    let startRotator = (currentRotator) => {
+        startTime = new Date().getTime();
 
-        let activatedItems = activatedRotatorItems(document.querySelector('main.content'));
-        let newDataSet = activateNextRotatorItems(activatedItems);
-        deactivateRotatorItems(activatedItems);
+        rotator = intervalID ? rotator : currentRotator;
+        current = intervalID ? activateNextItem(rotator) : activeItemOfRotator(rotator);
+        intervalID ? clearInterval(intervalID) : current.style.color = current.dataset.color;
 
-        currentDelay = newDataSet.speed - (new Date().getTime() - startTime);
-    }, currentDelay);
-}
+        delay = current.dataset.speed;
+        delay = correctValue(delay) - (new Date().getTime() - startTime);
+        delay = delay < 0 ? 0 : delay;
 
-function startRotator2(startDelay = 4) {
-    startDelay = correctValue(startDelay);
-    let currentDelay = startDelay;
-    let intervalID;
+        intervalID = setTimeout(startRotator, delay);
+    }
 
-    let rotator = function () {
-        let startTime = new Date().getTime();
-
-        let activatedItems = activatedRotatorItems(document.querySelector('main.content'));
-        let newDataSet = activateNextRotatorItems(activatedItems);
-        deactivateRotatorItems(activatedItems);
-
-        currentDelay = newDataSet.speed - (new Date().getTime() - startTime);
-        intervalID = setTimeout(rotator, currentDelay);
-    }.bind(this);
-
-    rotator();
+    for (let rotator of getRotators(containerSelector)) {
+        intervalID = 0;
+        startRotator(rotator);
+    }
 }
 
 
-const rotatorClass = 'rotator',
+const rotatorsContainerSelector = 'main.content',
+    rotatorClass = 'rotator',
     rotatorItemClass = 'rotator__case',
     activationClass = 'rotator__case_active',
+    getRotators = (containerSelector) => document.querySelector(containerSelector).querySelectorAll(`.${rotatorClass}`),
     isActiveItem = (item) => item ? item.classList.contains(activationClass) : false,
-    rotatorForItem = (item) => item ? item.closest(`.${rotatorClass}`) : null,
-    nextItemInRotator = (item) => {
-        const rotator = item ? rotatorForItem(item) : null;
+    activeItemOfRotator = (rotator) => rotator ? rotator.querySelector(`.${activationClass}`) : null,
+    nextItem = (rotator) => {
         if (rotator) {
-            const lastElChild = rotator.lastElementChild;
-            return item === lastElChild ? rotator.firstElementChild : item.nextElementSibling; }
+            const lastItemChild = rotator.lastElementChild,
+                activeItem = activeItemOfRotator(rotator);
+            return activeItem === lastItemChild ? rotator.firstElementChild : activeItem.nextElementSibling;
+        }
         return null;
     },
-    activatedRotatorItems = (container) => container.querySelectorAll(`.${rotatorItemClass}.${activationClass}`),
-    deactivateRotatorItems = (items) => {for(let item of items) {item.classList.remove(activationClass)}},
-    activateNextRotatorItems = (items) => {
-        for(let item of items) {
-            const nextItem = nextItemInRotator(item);
-            if (nextItem && !isActiveItem(nextItem)) {
-                nextItem.classList.add(activationClass);
-                nextItem.style.color = nextItem.dataset.color; }
-        }
-        return items[0].dataset;
+    deactivateItemOfRotator = (rotator) => activeItemOfRotator(rotator).classList.remove(activationClass),
+    activateNextItem = (rotator) => {
+        const next = nextItem(rotator);
+        deactivateItemOfRotator(rotator);
+        if (next && !isActiveItem(next)) {
+            next.classList.add(activationClass);
+            next.style.color = next.dataset.color; }
+        return next;
     },
-    correctValue = (value) => Math.abs(parseInt(value)) ? Math.abs(parseInt(value)) : 4;
+    correctValue = (value) => {
+        value = value ? Math.abs(parseInt(value)) : 4;
+        return value ? value  : 4;
+    }
 
-// startRotator();
-startRotator2();
+// rotator();  // Ok
+
+rotator2();  // Ok
 
