@@ -7,8 +7,7 @@ timerStop = (intervalID) => {
     alert('Вы победили в конкурсе');
 }
 
-function startRotator(delay = 1000, startDelay = 1000) {
-    delay = correctValue(delay);
+function startRotator(startDelay = 1000) {
     startDelay = correctValue(startDelay);
     let currentDelay = startDelay;
 
@@ -16,15 +15,14 @@ function startRotator(delay = 1000, startDelay = 1000) {
         let startTime = new Date().getTime();
 
         let activatedItems = activatedRotatorItems(document.querySelector('main.content'));
-        activateNextRotatorItems(activatedItems);
+        let newDataSet = activateNextRotatorItems(activatedItems);
         deactivateRotatorItems(activatedItems);
 
-        currentDelay = delay - (new Date().getTime() - startTime);
+        currentDelay = newDataSet.speed - (new Date().getTime() - startTime);
     }, currentDelay);
 }
 
-function startRotator2(delay = 1000, startDelay = 1000) {
-    delay = correctValue(delay);
+function startRotator2(startDelay = 4) {
     startDelay = correctValue(startDelay);
     let currentDelay = startDelay;
     let intervalID;
@@ -33,10 +31,10 @@ function startRotator2(delay = 1000, startDelay = 1000) {
         let startTime = new Date().getTime();
 
         let activatedItems = activatedRotatorItems(document.querySelector('main.content'));
-        activateNextRotatorItems(activatedItems);
+        let newDataSet = activateNextRotatorItems(activatedItems);
         deactivateRotatorItems(activatedItems);
-        
-        currentDelay = delay - (new Date().getTime() - startTime);
+
+        currentDelay = newDataSet.speed - (new Date().getTime() - startTime);
         intervalID = setTimeout(rotator, currentDelay);
     }.bind(this);
 
@@ -62,8 +60,10 @@ const rotatorClass = 'rotator',
         for(let item of items) {
             const nextItem = nextItemInRotator(item);
             if (nextItem && !isActiveItem(nextItem)) {
-                nextItem.classList.add(activationClass); }
+                nextItem.classList.add(activationClass);
+                nextItem.style.color = nextItem.dataset.color; }
         }
+        return items[0].dataset;
     },
     correctValue = (value) => Math.abs(parseInt(value)) ? Math.abs(parseInt(value)) : 4;
 
