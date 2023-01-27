@@ -59,9 +59,30 @@ function setBooksEventHandlers() {
         }
 
         const backgroundCtrl = (event) => {
-            /*
-              TODO:
-             */
+            const backgroundsContainerClass = 'book__control_background',
+                activeBackgroundClass = 'color_active',
+                grayColorClass = 'book_bg-gray',
+                whiteColorClass = 'book_bg-white',
+                blackColorClass = 'book_bg-black',
+                backgroundsContainer = booksContainer.querySelector(`.${backgroundsContainerClass}`),
+                activeBackground = () => backgroundsContainer.querySelector(`.${activeBackgroundClass}`);
+
+            activeBackground().classList.remove(activeBackgroundClass);
+            event.target.classList.add(activeBackgroundClass);
+
+            booksContainer.classList.remove(grayColorClass);
+            booksContainer.classList.remove(whiteColorClass);
+            booksContainer.classList.remove(blackColorClass);
+
+            if (event.target.className.includes('gray')) {
+                booksContainer.classList.add(grayColorClass);
+            }
+            if (event.target.className.includes('white')) {
+                booksContainer.classList.add(whiteColorClass);
+            }
+            if (event.target.className.includes('black')) {
+                booksContainer.classList.add(blackColorClass);
+            }
         }
                         //    =====================================================
 
