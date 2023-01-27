@@ -5,18 +5,35 @@
 let myHandlers = setEventHandlers();
 
 function setBooksEventHandlers() {
-    const booksContainer = document.getElementById(`book`);
     let handlers = {};
+    
+    const booksContainer = document.getElementById(`book`);
+
+    const fontsContainerClass = 'book__control_font-size',
+        activeFontClass = 'font-size_active',
+        fontSizeBigClass = 'book_fs-big',
+        fontSizeSmallClass = 'book_fs-small',
+        fontsContainer = booksContainer.querySelector(`.${fontsContainerClass}`),
+        activeFont = () => fontsContainer.querySelector(`.${activeFontClass}`);
+
+    const colorsContainerClass = 'book__control_color',
+        activeColorClass = 'color_active',
+        grayColorClass = 'book_color-gray',
+        whitesmokeColorClass = 'book_color-whitesmoke',
+        blackColorClass = 'book_color-black',
+        colorsContainer = booksContainer.querySelector(`.${colorsContainerClass}`),
+        activeColor = () => colorsContainer.querySelector(`.${activeColorClass}`);
+
+    const backgroundsContainerClass = 'book__control_background',
+        activeBackgroundClass = 'color_active',
+        grayBackgroundClass = 'book_bg-gray',
+        whiteBackgroundClass = 'book_bg-white',
+        blackBackgroundClass = 'book_bg-black',
+        backgroundsContainer = booksContainer.querySelector(`.${backgroundsContainerClass}`),
+        activeBackground = () => backgroundsContainer.querySelector(`.${activeBackgroundClass}`);
 
     handlers.click = (event) => {
         const fontSizeCtrl = (event) => {
-            const fontsContainerClass = 'book__control_font-size',
-                activeFontClass = 'font-size_active',
-                fontSizeBigClass = 'book_fs-big',
-                fontSizeSmallClass = 'book_fs-small',
-                fontsContainer = booksContainer.querySelector(`.${fontsContainerClass}`),
-                activeFont = () => fontsContainer.querySelector(`.${activeFontClass}`);
-
             activeFont().classList.remove(activeFontClass);
             event.target.classList.add(activeFontClass);
 
@@ -32,14 +49,6 @@ function setBooksEventHandlers() {
         }
 
         const colorCtrl = (event) => {
-            const colorsContainerClass = 'book__control_color',
-                activeColorClass = 'color_active',
-                grayColorClass = 'book_color-gray',
-                whitesmokeColorClass = 'book_color-whitesmoke',
-                blackColorClass = 'book_color-black',
-                colorsContainer = booksContainer.querySelector(`.${colorsContainerClass}`),
-                activeColor = () => colorsContainer.querySelector(`.${activeColorClass}`);
-
             activeColor().classList.remove(activeColorClass);
             event.target.classList.add(activeColorClass);
 
@@ -59,29 +68,21 @@ function setBooksEventHandlers() {
         }
 
         const backgroundCtrl = (event) => {
-            const backgroundsContainerClass = 'book__control_background',
-                activeBackgroundClass = 'color_active',
-                grayColorClass = 'book_bg-gray',
-                whiteColorClass = 'book_bg-white',
-                blackColorClass = 'book_bg-black',
-                backgroundsContainer = booksContainer.querySelector(`.${backgroundsContainerClass}`),
-                activeBackground = () => backgroundsContainer.querySelector(`.${activeBackgroundClass}`);
-
             activeBackground().classList.remove(activeBackgroundClass);
             event.target.classList.add(activeBackgroundClass);
 
-            booksContainer.classList.remove(grayColorClass);
-            booksContainer.classList.remove(whiteColorClass);
-            booksContainer.classList.remove(blackColorClass);
+            booksContainer.classList.remove(grayBackgroundClass);
+            booksContainer.classList.remove(whiteBackgroundClass);
+            booksContainer.classList.remove(blackBackgroundClass);
 
             if (event.target.className.includes('gray')) {
-                booksContainer.classList.add(grayColorClass);
+                booksContainer.classList.add(grayBackgroundClass);
             }
             if (event.target.className.includes('white')) {
-                booksContainer.classList.add(whiteColorClass);
+                booksContainer.classList.add(whiteBackgroundClass);
             }
             if (event.target.className.includes('black')) {
-                booksContainer.classList.add(blackColorClass);
+                booksContainer.classList.add(blackBackgroundClass);
             }
         }
                         //    =====================================================
