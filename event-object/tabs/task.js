@@ -11,8 +11,6 @@ const tabsClasses = {
     contentActivation: 'tab__content_active'
 }
 let myHandlers = setEventHandlers();
-let containerID = (id) => document.getElementById(id);
-let containerClass = (container, className) => container.querySelector(`.${className}`);
 
 function setTabsEventHandlers() {
     let handlers = {};
