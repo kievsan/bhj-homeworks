@@ -15,21 +15,21 @@ function setBooksEventHandlers() {
             fontSizeSmallClass = 'book_fs-small';
 
         const fontSizeCtrl = (event) => {
-            const booksContainer = () => document.getElementById(`book`),
-                fontsContainer = () => booksContainer().querySelector(`.${fontsContainerClass}`),
-                activeFont = () => fontsContainer().querySelector(`.${activeFontClass}`);
+            const booksContainer = document.getElementById(`book`),
+                fontsContainer = booksContainer.querySelector(`.${fontsContainerClass}`),
+                activeFont = () => fontsContainer.querySelector(`.${activeFontClass}`);
 
             activeFont().classList.remove(activeFontClass);
             event.target.classList.add(activeFontClass);
 
-            booksContainer().classList.remove(fontSizeBigClass);
-            booksContainer().classList.remove(fontSizeSmallClass);
+            booksContainer.classList.remove(fontSizeBigClass);
+            booksContainer.classList.remove(fontSizeSmallClass);
 
             if (event.target.className.includes('big')) {
-                booksContainer().classList.add(fontSizeBigClass);
+                booksContainer.classList.add(fontSizeBigClass);
             }
             if (event.target.className.includes('small')) {
-                booksContainer().classList.add(fontSizeSmallClass);
+                booksContainer.classList.add(fontSizeSmallClass);
             }
         }
 
