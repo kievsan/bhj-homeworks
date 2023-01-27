@@ -6,13 +6,13 @@ let myHandlers = setEventHandlers();
 
 function setBooksEventHandlers() {
     let handlers = {};
-    
+
     const booksContainer = document.getElementById(`book`);
 
     const fontsContainerClass = 'book__control_font-size',
         activeFontClass = 'font-size_active',
-        fontSizeBigClass = 'book_fs-big',
-        fontSizeSmallClass = 'book_fs-small',
+        fontBigSizeClass = 'book_fs-big',
+        fontSmallSizeClass = 'book_fs-small',
         fontsContainer = booksContainer.querySelector(`.${fontsContainerClass}`),
         activeFont = () => fontsContainer.querySelector(`.${activeFontClass}`);
 
@@ -37,14 +37,14 @@ function setBooksEventHandlers() {
             activeFont().classList.remove(activeFontClass);
             event.target.classList.add(activeFontClass);
 
-            booksContainer.classList.remove(fontSizeBigClass);
-            booksContainer.classList.remove(fontSizeSmallClass);
+            booksContainer.classList.remove(fontBigSizeClass);
+            booksContainer.classList.remove(fontSmallSizeClass);
 
-            if (event.target.className.includes('big')) {
-                booksContainer.classList.add(fontSizeBigClass);
+            if (event.target.dataset.size === 'big') {
+                booksContainer.classList.add(fontBigSizeClass);
             }
-            if (event.target.className.includes('small')) {
-                booksContainer.classList.add(fontSizeSmallClass);
+            if (event.target.dataset.size === 'small') {
+                booksContainer.classList.add(fontSmallSizeClass);
             }
         }
 
@@ -56,13 +56,13 @@ function setBooksEventHandlers() {
             booksContainer.classList.remove(whitesmokeColorClass);
             booksContainer.classList.remove(blackColorClass);
 
-            if (event.target.className.includes('gray')) {
+            if (event.target.dataset.textColor === 'gray') {
                 booksContainer.classList.add(grayColorClass);
             }
-            if (event.target.className.includes('whitesmoke')) {
+            if (event.target.dataset.textColor === 'whitesmoke') {
                 booksContainer.classList.add(whitesmokeColorClass);
             }
-            if (event.target.className.includes('black')) {
+            if (event.target.dataset.textColor === 'black') {
                 booksContainer.classList.add(blackColorClass);
             }
         }
@@ -75,13 +75,13 @@ function setBooksEventHandlers() {
             booksContainer.classList.remove(whiteBackgroundClass);
             booksContainer.classList.remove(blackBackgroundClass);
 
-            if (event.target.className.includes('gray')) {
+            if (event.target.dataset.bgColor === 'gray') {
                 booksContainer.classList.add(grayBackgroundClass);
             }
-            if (event.target.className.includes('white')) {
+            if (event.target.dataset.bgColor === 'white') {
                 booksContainer.classList.add(whiteBackgroundClass);
             }
-            if (event.target.className.includes('black')) {
+            if (event.target.dataset.bgColor === 'black') {
                 booksContainer.classList.add(blackBackgroundClass);
             }
         }
