@@ -12,9 +12,11 @@ function setChatEventHandlers() {
         chatActivationClass = 'chat-widget_active',
         isActiveChat = () => chatContainer.classList.contains(chatActivationClass),
         inputChatContainer = document.getElementById(`chat-widget__input`),
+        messagesContainer = chatContainer.querySelector( '.chat-widget__messages-container' ),
         messages = chatContainer.querySelector( '.chat-widget__messages' );
 
     inputChatContainer.setAttribute('minlength', '1');
+    inputChatContainer.setAttribute('maxlength', '50');
 
     handlers.click = (event) => {
         const isChat = event.target.closest(`.${chatContainerClass}`),
@@ -41,7 +43,7 @@ function setChatEventHandlers() {
                 }
                 return false;
             },
-            getRandServerMsg = () => {
+            getRandBotMsg = () => {
                 const phrases = [
                         'Hi!', 'By!', 'Ok', 'I don\'t care...', 'I don\'t understand...'
                     ],
@@ -54,6 +56,7 @@ function setChatEventHandlers() {
             document.activeElement.blur();
 
             if (inputChatContainer.checkValidity() && myHandlers.chat.currentMassage && !hasStopText()) {
+                // Клиент
                 messages.innerHTML += `
                   <div class="message message_client">
                     <div class="message__time">${getTime()}</div>
@@ -62,14 +65,19 @@ function setChatEventHandlers() {
                     </div>
                   </div>
                 `;
+                // Бот
                 messages.innerHTML += `
                   <div class="message">
                     <div class="message__time">${getTime()}</div>
                     <div class="message__text">
-                      ${getRandServerMsg()}
+                      ${getRandBotMsg()}
                     </div>
                   </div>
                 `;
+                // Прокрутка вниз
+                let intervalID = setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 100);
             }
             event.target.value = '';
             handlers.currentMassage = '';
