@@ -70,25 +70,29 @@ function setChatEventHandlers() {
         }
     }
 
-    handlers.input = (event) => myHandlers.chat.currentMassage = event.target.value.trim();
+    handlers.input = (event) => myHandlers.chat.currentMassage = event.target.value.trim();  // Текст user-сообщения
 
     handlers.keydown = (event) => {
         const isChatInput = () => event.target.closest(`input.${'chat-widget__input'}`);
-
+        // Нажата клавиша Enter
         if (event.keyCode === 13 && isChatInput()) {
+            // блокировать ввод
             document.activeElement.blur();
-
+            // Сообщение подходящей длины без запретных слов
             if (inputChatContainer.checkValidity() && myHandlers.chat.currentMassage && !hasStopText()) {
+                // Сообщение клиента
                 sendUserMsg();
                 myHandlers.chat.intervalID = setTimeout(scrollDownMessages, 10);
+                // Случайное сообщение бота
                 myHandlers.chat.intervalID = setTimeout(() => {
                     sendBotMsg();
                     myHandlers.chat.intervalID = setTimeout(scrollDownMessages, 10);
                 }, 300);
             }
+            // input reset
             event.target.value = '';
             myHandlers.chat.currentMassage = '';
-
+            // разблокировать ввод
             event.target.focus();
         }
     }
