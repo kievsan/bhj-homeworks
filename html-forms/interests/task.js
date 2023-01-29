@@ -1,7 +1,6 @@
 // Домашнее задание к занятию 2.2 «Работа с HTML-формами»
 // Дерево интересов
 
-
 let myHandlers = setEventHandlers();
 
 function setCheckboxEventHandlers() {
@@ -34,14 +33,9 @@ function setCheckboxEventHandlers() {
             checkboxes.forEach((checkbox) => isChecked = isChecked || checkbox.checked);
             return !isChecked;
         }
+    ;
 
-    handlers.click = (event) => {
-        const isCheckbox = event.target.closest(`input.interest__check`);
-        if (!isCheckbox || !mainCheckboxContainer(event.target)) {
-            return }
-
-        // let currentSiblings = siblings(Checkbox), currentChildren = children(Checkbox), currentParent = parent(Checkbox);
-
+    handlers.change = (event) => {
         const manageSimpleCheckboxes = (Checkbox = event.target) => {
             children(Checkbox).forEach((checkbox) => {
                 checkbox.checked = Checkbox.checked;
@@ -88,39 +82,9 @@ function setEventHandlers() {
     return handlers;
 }
 
-function startHandlers() {
-    document.addEventListener('click', myHandlers.checkbox.click);
-}
+function startHandlers() { document.addEventListener('change', myHandlers.checkbox.change); }
 
-function stopHandlers() {
-    document.removeEventListener('click', myHandlers.checkbox.click);
-}
-
-function start() {
-    startHandlers();
-    /*
-      TODO:
-     */
-}
-
-function stop() {
-    stopHandlers();
-    /*
-      TODO:
-     */
-}
+function stopHandlers() { document.removeEventListener('change', myHandlers.checkbox.change); }
 
 
-start();
-
-
-
-
-
-// (Rotate) Indeterminate Checkboxes
-// function ts(cb) {
-//     if (cb.readOnly) cb.checked=cb.readOnly=false;
-//     else if (!cb.checked) cb.readOnly=cb.indeterminate=true;
-// }
-
-
+startHandlers();
