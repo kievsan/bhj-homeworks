@@ -40,12 +40,14 @@ function setCheckboxEventHandlers() {
         if (!isCheckbox || !mainCheckboxContainer(event.target)) {
             return }
 
-        const Checkbox = event.target
+        const Checkbox = event.target;
         // let currentSiblings = siblings(Checkbox), currentChildren = children(Checkbox), currentParent = parent(Checkbox);
 
-        const manageSimpleCheckboxes = (current = Checkbox) => {  // indeterminate
-            if (children(current)) {
-                children(current).forEach((checkbox) => checkbox.checked = current.checked); }
+        const manageSimpleCheckboxes = (current = Checkbox) => {
+            children(current).forEach((checkbox) => {
+                checkbox.checked = current.checked;
+                checkbox.indeterminate = false;
+            });
             if (parent(current)) {
                 parent(current).checked = isFullChecked(siblings(current));
                 parent(current).indeterminate = !isFullChecked(siblings(current)) && !hasNoChecked(siblings(current)); }
