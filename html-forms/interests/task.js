@@ -43,7 +43,7 @@ function setCheckboxEventHandlers() {
         const Checkbox = event.target
         // let currentSiblings = siblings(Checkbox), currentChildren = children(Checkbox), currentParent = parent(Checkbox);
 
-        const manageCheckboxes = (current = Checkbox) => {  // indeterminate
+        const manageSimpleCheckboxes = (current = Checkbox) => {  // indeterminate
             if (children(current)) {
                 children(current).forEach((checkbox) => checkbox.checked = current.checked); }
             if (parent(current)) {
@@ -51,9 +51,8 @@ function setCheckboxEventHandlers() {
                 parent(current).indeterminate = !isFullChecked(siblings(current)) && !hasNoChecked(siblings(current)); }
         }
 
-        manageCheckboxes();
+        manageSimpleCheckboxes();
     }
-
     return handlers;
 }
 
