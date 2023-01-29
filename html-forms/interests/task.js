@@ -40,20 +40,44 @@ function setCheckboxEventHandlers() {
         if (!isCheckbox || !mainCheckboxContainer(event.target)) {
             return }
 
-        const Checkbox = event.target;
         // let currentSiblings = siblings(Checkbox), currentChildren = children(Checkbox), currentParent = parent(Checkbox);
 
-        const manageSimpleCheckboxes = (current = Checkbox) => {
-            children(current).forEach((checkbox) => {
-                checkbox.checked = current.checked;
+        const manageSimpleCheckboxes = (Checkbox = event.target) => {
+            children(Checkbox).forEach((checkbox) => {
+                checkbox.checked = Checkbox.checked;
                 checkbox.indeterminate = false;
             });
-            if (parent(current)) {
-                parent(current).checked = isFullChecked(siblings(current));
-                parent(current).indeterminate = !isFullChecked(siblings(current)) && !hasNoChecked(siblings(current)); }
+            if (parent(Checkbox)) {
+                parent(Checkbox).checked = isFullChecked(siblings(Checkbox));
+                parent(Checkbox).indeterminate = !isFullChecked(siblings(Checkbox)) && !hasNoChecked(siblings(Checkbox));
+            }
         }
 
-        manageSimpleCheckboxes();
+        const manageCheckboxes = (Checkbox = event.target) => {
+            const checkChildren = (current) => {
+                if (children(current)) {
+                    children(current).forEach((checkbox) => {
+                        checkbox.checked = current.checked;
+                        checkbox.indeterminate = false;
+                        checkChildren(checkbox);
+                    });
+                }
+            }
+            const checkParent = (current) => {
+                let checkbox = parent(current);
+                if (checkbox) {
+                    checkbox.checked = isFullChecked(siblings(current));
+                    checkbox.indeterminate = !isFullChecked(siblings(current)) && !hasNoChecked(siblings(current));
+                    checkParent(checkbox);
+                }
+            }
+
+            checkChildren(Checkbox);
+            checkParent(Checkbox);
+        }
+
+        // manageSimpleCheckboxes();
+        manageCheckboxes();
     }
     return handlers;
 }
