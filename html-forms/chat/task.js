@@ -58,7 +58,7 @@ function setChatEventHandlers() {
 
     handlers.click = (event) => {
         const isChat = event.target.closest(`.${chatContainerClass}`),
-            isSideWidget = event.target.closest(`.${'chat-widget__side'}`);
+            isSideWidget = event.target.closest(`.chat-widget__side`);
 
         if (!isChat) {
             return; }

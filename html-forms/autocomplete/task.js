@@ -85,6 +85,7 @@ class Autocomplete {
       this.text = optionText;
       this.value = optionValue;
     }
+
     text = text.trim();
     if (!text) {
       return new MatchingOption('Чубакка', '1');
