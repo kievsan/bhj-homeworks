@@ -1,5 +1,5 @@
 // Домашнее задание к занятию 2.3 «Изменение структуры HTML-документа».
-// Всплывающая подсказка.
+// Всплывающая подсказка
 
 class Tooltip {
     static classes = {
@@ -80,9 +80,3 @@ function stopHandlers() {
 Tooltip.manager.insertTooltips();
 let myHandlers = setEventHandlers();
 startHandlers();
-
-
-
-
-
-
