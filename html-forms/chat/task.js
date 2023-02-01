@@ -70,7 +70,8 @@ function setChatEventHandlers() {
         }
     }
 
-    handlers.input = (event) => myHandlers.chat.currentMassage = event.target.value.trim();  // Текст user-сообщения
+    handlers.input = (event) => myHandlers.chat.currentMassage = event.target.value
+        ? event.target.value.trim() : '';  // Текст user-сообщения
 
     handlers.keydown = (event) => {
         const isChatInput = () => event.target.closest(`input.${'chat-widget__input'}`);

@@ -47,20 +47,29 @@ function setTaskEventHandlers() {
 
     handlers.click = (event) => {
         const isRemovingWidget = event.target.closest(`.${ToDoList.classes.delete}`),
-            isTask = event.target.closest(`.${ToDoList.classes.task}`);
+            isInput = event.target.closest(`input.task__input`),
+            isTasks = event.target.closest(`.tasks`);
 
-        if (!isTask) {
+        if (!isTasks) {
             return; }
+
+        if (isInput) {
+            event.target.focus();
+        }
 
         if (isRemovingWidget) {
             myHandlers.task.todoList.del(event.target);
             myHandlers.task.intervalID = setTimeout(scrollDownTasks, 10);
             return;
         }
-
     }
 
-    handlers.input = (event) => myHandlers.task.currentTaskText = event.target.value.trim();  // Текст текущей задачи
+    handlers.input = (event) => {
+        myHandlers.task.currentTaskText = event.target.value
+            ? event.target.value.trim() : '';  // Текст текущей задачи
+
+        event.preventDefault();
+        }
 
     handlers.keydown = (event) => {
         const isTaskInput = () => event.target.closest(`input.${'tasks__input'}`);
