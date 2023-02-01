@@ -32,7 +32,7 @@ class ToDoList {
     }
 
     del = (element) => {
-        
+        element.remove();
     }
 
 }
