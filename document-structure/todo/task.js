@@ -54,6 +54,7 @@ function setTaskEventHandlers() {
 
         if (isRemovingWidget) {
             myHandlers.task.todoList.del(event.target);
+            myHandlers.task.intervalID = setTimeout(scrollDownTasks, 10);
             return;
         }
 
