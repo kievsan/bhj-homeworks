@@ -31,7 +31,9 @@ class ToDoList {
         clearInterval(myHandlers.task.intervalID);
     }
 
-    del = (element) => {}
+    del = (element) => {
+        
+    }
 
 }
 
@@ -51,7 +53,7 @@ function setTaskEventHandlers() {
             return; }
 
         if (isRemovingWidget) {
-            
+            myHandlers.task.todoList.del(event.target);
             return;
         }
 
