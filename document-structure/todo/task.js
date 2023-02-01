@@ -3,16 +3,18 @@
 
 class ToDoList {
     static classes = {
+        container: 'tasks',
         task: 'task',
         title: 'task__title',
         list: 'tasks__list',
         delete: 'task__remove'
     }
     static ID = {
+        container: 'tasks',
         list: 'tasks__list',
         form: 'tasks__form'
     }
-    static htmlTaskTemplate = (taskText) => `
+    static taskHtmlTemplate = (taskText) => `
          <div class=${ToDoList.classes.task}>
              <div class=${ToDoList.classes.title}>
                 ${taskText}
@@ -21,12 +23,14 @@ class ToDoList {
          </div>`;
 
     constructor() {
-        this.html = document.getElementById(ToDoList.ID.list);
+        this.container = () => document.getElementById(ToDoList.ID.container);
+        this.list = document.getElementById(ToDoList.ID.list);
+        this.Form = document.getElementById(ToDoList.ID.form);
     }
 
     add = (taskText) => {
-        this.html.insertAdjacentHTML(
-            'beforeend',ToDoList.htmlTaskTemplate(taskText)
+        this.list.insertAdjacentHTML(
+            'afterbegin',ToDoList.taskHtmlTemplate(taskText)
         );
         clearInterval(myHandlers.task.intervalID);
     }
@@ -43,7 +47,6 @@ function setTaskEventHandlers() {
         currentTaskText: '',
         intervalID: 0
     }
-    const scrollDownTasks = () => myHandlers.task.todoList.html.scrollTop = myHandlers.task.todoList.html.scrollHeight;
 
     handlers.click = (event) => {
         const isRemovingWidget = event.target.closest(`.${ToDoList.classes.delete}`),
@@ -59,7 +62,6 @@ function setTaskEventHandlers() {
 
         if (isRemovingWidget) {
             myHandlers.task.todoList.del(event.target);
-            myHandlers.task.intervalID = setTimeout(scrollDownTasks, 10);
             return;
         }
     }
@@ -81,7 +83,6 @@ function setTaskEventHandlers() {
             if (myHandlers.task.currentTaskText) {
                 // Добавить Строку с текстом задачи
                 myHandlers.task.todoList.add(myHandlers.task.currentTaskText);
-                myHandlers.task.intervalID = setTimeout(scrollDownTasks, 10);
             }
             // input reset
             event.target.value = '';
