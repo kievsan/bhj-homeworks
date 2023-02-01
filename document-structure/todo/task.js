@@ -23,21 +23,15 @@ class ToDoList {
          </div>`;
 
     constructor() {
-        this.container = () => document.getElementById(ToDoList.ID.container);
-        this.list = document.getElementById(ToDoList.ID.list);
-        this.Form = document.getElementById(ToDoList.ID.form);
+        this.html = document.getElementById(ToDoList.ID.list);
     }
 
     add = (taskText) => {
-        this.list.insertAdjacentHTML(
-            'afterbegin',ToDoList.taskHtmlTemplate(taskText)
-        );
+        this.html.insertAdjacentHTML('afterbegin',ToDoList.taskHtmlTemplate(taskText));
         clearInterval(myHandlers.task.intervalID);
     }
 
-    del = (element) => {
-        element.remove();
-    }
+    del = (element) => element.remove();
 
 }
 
@@ -49,9 +43,9 @@ function setTaskEventHandlers() {
     }
 
     handlers.click = (event) => {
-        const isRemovingWidget = event.target.closest(`.${ToDoList.classes.delete}`),
+        const isRemovingWidget = event.target.className === ToDoList.classes.delete,
             isInput = event.target.closest(`input.task__input`),
-            isTasks = event.target.closest(`.tasks`);
+            isTasks = event.target.closest(`.${ToDoList.classes.container}`);
 
         if (!isTasks) {
             return; }
@@ -64,6 +58,8 @@ function setTaskEventHandlers() {
             myHandlers.task.todoList.del(event.target);
             return;
         }
+
+        event.preventDefault();
     }
 
     handlers.input = (event) => {
@@ -71,7 +67,7 @@ function setTaskEventHandlers() {
             ? event.target.value.trim() : '';  // Текст текущей задачи
 
         event.preventDefault();
-        }
+    }
 
     handlers.keydown = (event) => {
         const isTaskInput = () => event.target.closest(`input.${'tasks__input'}`);
