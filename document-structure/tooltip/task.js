@@ -26,11 +26,19 @@ class Tooltip {
         this.startLocation = element.getBoundingClientRect();
     };
 
-    activate = () => {
-        this.html.style.left = `${this.startLocation.left}px`;
-        this.html.style.top = `${this.startLocation.bottom}px`;
-        this.html.classList.add(Tooltip.classes.activation);
+    switch = () => {
+        if (this.html) {
+            if (this.html.classList.contains(Tooltip.classes.activation)) {
+                Tooltip.manager.deactivateTooltips();
+            } else {
+                Tooltip.manager.deactivateTooltips();
+                this.html.style.left = `${this.startLocation.left}px`;
+                this.html.style.top = `${this.startLocation.bottom}px`;
+                this.html.classList.add(Tooltip.classes.activation);
+            }
+        }
     }
+
 }
 
 function setTooltipEventHandlers() {
@@ -38,20 +46,11 @@ function setTooltipEventHandlers() {
 
     handlers.wheel = () => Tooltip.manager.deactivateTooltips();
 
-    handlers.mousemove = () => Tooltip.manager.deactivateTooltips();
-
     handlers.click = (event) => {
-        Tooltip.manager.deactivateTooltips();
-
         const isElementWithTooltip = event.target.closest(`a.${Tooltip.classes.hasTooltip}`);
         if (!isElementWithTooltip) {
             return; }
-
-        const tooltip = new Tooltip(event.target);
-
-        if (tooltip.html && !tooltip.html.classList.contains(Tooltip.classes.activation)) {
-            tooltip.activate(); }
-
+        new Tooltip(event.target).switch();
         event.preventDefault();
     }
 
@@ -67,13 +66,11 @@ function setEventHandlers() {
 function startHandlers() {
     document.addEventListener('click', myHandlers.tooltip.click);
     document.addEventListener('wheel', myHandlers.tooltip.wheel);
-    document.addEventListener('mousemove', myHandlers.tooltip.mousemove);
 }
 
 function stopHandlers() {
     document.removeEventListener('click', myHandlers.tooltip.click);
     document.removeEventListener('wheel', myHandlers.tooltip.wheel);
-    document.removeEventListener('mousemove', myHandlers.tooltip.mousemove);
 }
 
 
