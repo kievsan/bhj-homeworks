@@ -36,16 +36,16 @@ function Product(htmlContainer) {
         title: this.htmlContainer.querySelector(`.${this.classes.title}`),
         img: this.htmlContainer.querySelector(`img.${this.classes.img}`),
         quantity: this.htmlContainer.querySelector(`.${this.classes.quantity}`),
-        buttonAdd: this.html.quantity.querySelector(`.product__add`),
-        quantityControl: this.html.quantity.querySelector(`.${this.classes.quantityControl}`),
-        value: this.html.quantityControl.querySelector(`.product__quantity-value`),
-        buttonDec: this.html.quantityControl.querySelector(`.product__quantity-control_dec`),
-        buttonInc: this.html.quantityControl.querySelector(`.product__quantity-control_inc`)
+        buttonAdd: this.htmlContainer.querySelector(`.product__add`),
+        quantityControl: this.htmlContainer.querySelector(`.${this.classes.quantityControl}`),
+        value: this.htmlContainer.querySelector(`.product__quantity-value`),
+        buttonDec: this.htmlContainer.querySelector(`.product__quantity-control_dec`),
+        buttonInc: this.htmlContainer.querySelector(`.product__quantity-control_inc`)
     }
 
-    this.name = this.html.title ?? this.html.title.textContent;
-    this.img = this.html.img ?? this.html.img.src;
-    this.quantity = this.html.value ?? parseInt(this.html.value.textContent);
+    this.name = this.html.title ? this.html.title.textContent: null;
+    this.img = this.html.img ? this.html.img.src : null;
+    this.quantity = this.html.value ? parseInt(this.html.value.textContent) : null;
 
     this.handlers = {
         start: () => {
@@ -64,16 +64,13 @@ function Product(htmlContainer) {
 class GroceryShelf {
     constructor(htmlContainer = document.body.querySelector(`.products`)) {
         this.className = 'products';
+        this.htmlContainer = htmlContainer.closest(`.${this.className}`);
         this.classes = { product: 'product' }
-        this.html = {
-            container: () => htmlContainer.closest(`.${this.className}`),
-            products: () => this.html.container()
-                ?? this.html.container().querySelectorAll(`.${this.classes.product}`)
-        }
+        this.html = { products: () => this.htmlContainer.getElementsByClassName(this.classes.product) }
         // this.activateButtons();
     }
 
-    list = () => this.html.products().map((htmlContainer) => new Product(htmlContainer));
+    list = () => [...this.html.products()].map((htmlContainer) => new Product(htmlContainer));
 
     activateButtons = () => this.list().forEach((product) => product.handlers.start());
 
@@ -84,18 +81,17 @@ class GroceryShelf {
 class GroceryCart {
     constructor(htmlContainer = document.body.querySelector(`.cart`)) {
         this.className = 'cart';
+        this.htmlContainer = htmlContainer.closest(`.${this.className}`);
         this.classes = {
             title: 'cart__title',
             products: 'cart__products',
             product: 'cart__product'
         }
         this.html = {
-            container: () => htmlContainer.closest(`.${this.className}`),
-            products: () => this.html.container()
-                ?? this.html.container().querySelectorAll(`.${this.classes.product}`),
-            title: this.html.container().querySelector(`.${this.classes.title}`)
+            products: () => this.htmlContainer.getElementsByClassName(this.classes.product),
+            title: this.htmlContainer.querySelector(`.${this.classes.title}`)
         }
-        this.name = this.html.title ?? this.html.title.textContent;
+        this.name = this.html.title ? this.html.title.textContent : null;
     }
 
     list = () => this.html.products().map( (htmlContainer) => new CartProduct(htmlContainer) );
@@ -117,17 +113,19 @@ class GroceryStore {
 }
 
 function setCartEventHandlers() {
-    let handlers = { currentTaskText: '' }
+    let handlers = {}
 
     handlers.clickOnButtonAdd = (event) => {
-
+        console.log('Add');
     }
 
     handlers.clickOnButtonDec = (event) => {
+        console.log('Dec');
 
     }
 
     handlers.clickOnButtonInc = (event) => {
+        console.log('Inc');
 
     }
 
