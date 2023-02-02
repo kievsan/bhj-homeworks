@@ -49,14 +49,14 @@ function Product(htmlContainer) {
 
     this.handlers = {
         start: () => {
-            this.buttonDec.addEventListener('click', myHandlers.cart.clickOnButtonDec);
-            this.buttonInc.addEventListener('click', myHandlers.cart.clickOnButtonInc);
-            this.buttonAdd.addEventListener('click', myHandlers.cart.clickOnButtonAdd);
+            this.html.buttonDec.addEventListener('click', myHandlers.cart.clickOnButtonDec);
+            this.html.buttonInc.addEventListener('click', myHandlers.cart.clickOnButtonInc);
+            this.html.buttonAdd.addEventListener('click', myHandlers.cart.clickOnButtonAdd);
         },
         stop: () => {
-            this.buttonDec.removeEventListener('click', myHandlers.cart.clickOnButtonDec);
-            this.buttonInc.removeEventListener('click', myHandlers.cart.clickOnButtonInc);
-            this.buttonAdd.removeEventListener('click', myHandlers.cart.clickOnButtonAdd);
+            this.html.buttonDec.removeEventListener('click', myHandlers.cart.clickOnButtonDec);
+            this.html.buttonInc.removeEventListener('click', myHandlers.cart.clickOnButtonInc);
+            this.html.buttonAdd.removeEventListener('click', myHandlers.cart.clickOnButtonAdd);
         }
     }
 }
@@ -70,14 +70,14 @@ class GroceryShelf {
             products: () => this.html.container()
                 ?? this.html.container().querySelectorAll(`.${this.classes.product}`)
         }
-        this.activateButtons();
+        // this.activateButtons();
     }
 
-    list = () => this.html.products().map( (htmlContainer) => new Product(htmlContainer) );
+    list = () => this.html.products().map((htmlContainer) => new Product(htmlContainer));
 
-    activateButtons = () => this.list().forEach( (product) => product.handlers.start() );
+    activateButtons = () => this.list().forEach((product) => product.handlers.start());
 
-    deactivateButtons = () => this.list().forEach( (product) => product.handlers.stop() );
+    deactivateButtons = () => this.list().forEach((product) => product.handlers.stop());
 
 }
 
@@ -141,20 +141,17 @@ function setEventHandlers() {
 }
 
 function startHandlers() {
-    todoList.html.button.addEventListener('click', myHandlers.cart.clickOnButtonAdd);
-    todoList.html.button.addEventListener('click', myHandlers.cart.clickOnButtonDec);
-    todoList.html.button.addEventListener('click', myHandlers.cart.clickOnButtonInc);
+    store.shelves.forEach((shelf) => shelf.activateButtons());
 }
 
 function stopHandlers() {
-    todoList.html.button.removeEventListener('click', myHandlers.cart.clickOnButtonAdd);
-    todoList.html.button.removeEventListener('click', myHandlers.cart.clickOnButtonDec);
-    todoList.html.button.removeEventListener('click', myHandlers.cart.clickOnButtonInc);
+    store.shelves.forEach((shelf) => shelf.deactivateButtons());
 }
 
 
 let store = new GroceryStore(),
     myHandlers = setEventHandlers();
+
 startHandlers();
 
 
