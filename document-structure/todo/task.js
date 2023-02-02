@@ -1,91 +1,66 @@
 // Домашнее задание к занятию 2.3 «Изменение структуры HTML-документа».
 // Простой список дел
 
-class ToDoList {
-    static classes = {
+const todoList = {
+    classes: {
         container: 'tasks',
         task: 'task',
         title: 'task__title',
         list: 'tasks__list',
         delete: 'task__remove'
-    }
-    static ID = {
-        container: 'tasks',
-        list: 'tasks__list',
-        form: 'tasks__form'
-    }
-    static taskHtmlTemplate = (taskText) => `
-         <div class=${ToDoList.classes.task}>
-             <div class=${ToDoList.classes.title}>
+    },
+    html: {
+        container: document.getElementById('tasks'),
+        form: document.getElementById('tasks__form'),
+        input: document.getElementById('task__input'),
+        button: document.getElementById('tasks__add'),
+        list: document.getElementById('tasks__list'),
+        taskTemplate: (taskText) => `
+         <div class=${todoList.classes.task}>
+             <div class=${todoList.classes.title}>
                 ${taskText}
              </div>
-              <a href="#" class=${ToDoList.classes.delete}>&times;</a>
-         </div>`;
-
-    constructor() {
-        this.html = document.getElementById(ToDoList.ID.list);
+              <a href="#" class=${todoList.classes.delete}>&times;</a>
+         </div>`
+    },
+    add: (taskText) => {
+        todoList.html.list.insertAdjacentHTML('afterbegin',todoList.html.taskTemplate(taskText));
+        const removeWidget = todoList.html.list.firstElementChild.querySelector(`a.${todoList.classes.delete}`);
+        removeWidget.onclick = myHandlers.task.removeTaskByClick;
     }
-
-    add = (taskText) => {
-        this.html.insertAdjacentHTML('afterbegin',ToDoList.taskHtmlTemplate(taskText));
-        clearInterval(myHandlers.task.intervalID);
-    }
-
-    del = (element) => element.remove();
-
 }
 
 function setTaskEventHandlers() {
-    let handlers = {
-        todoList: new ToDoList(),
-        currentTaskText: '',
-        intervalID: 0
-    }
+    let handlers = { currentTaskText: '' }
 
-    handlers.click = (event) => {
-        const isRemovingWidget = event.target.className === ToDoList.classes.delete,
-            isInput = event.target.closest(`input.task__input`),
-            isTasks = event.target.closest(`.${ToDoList.classes.container}`);
-
-        if (!isTasks) {
-            return; }
-
-        if (isInput) {
-            event.target.focus();
-        }
-
-        if (isRemovingWidget) {
-            myHandlers.task.todoList.del(event.target);
-            return;
-        }
-
+    handlers.removeTaskByClick = (event) => {
+        const currentTask = event.target.closest(`.${todoList.classes.task}`);
+        currentTask.remove();
         event.preventDefault();
+        // event.stopPropagation ? event.stopPropagation() : (event.cancelBubble=true);  // остановить всплытие
     }
 
     handlers.input = (event) => {
-        myHandlers.task.currentTaskText = event.target.value
+        handlers.currentTaskText = event.target.value
             ? event.target.value.trim() : '';  // Текст текущей задачи
-
         event.preventDefault();
     }
 
-    handlers.keydown = (event) => {
-        const isTaskInput = () => event.target.closest(`input.${'tasks__input'}`);
-        // Нажата клавиша Enter
-        if (event.keyCode === 13 && isTaskInput()) {
-            // блокировать ввод
-            document.activeElement.blur();
-            // при наличии текста в поле ввода
-            if (myHandlers.task.currentTaskText) {
-                // Добавить Строку с текстом задачи
-                myHandlers.task.todoList.add(myHandlers.task.currentTaskText);
-            }
-            // input reset
-            event.target.value = '';
-            handlers.currentTaskText = '';
-            // разблокировать ввод
-            event.target.focus();
+    handlers.clickOnButtonAdd = (event) => {
+        // блокировать ввод
+        document.activeElement.blur();
+        // при наличии текста в поле ввода
+        if (handlers.currentTaskText) {
+            // Добавить Строку с текстом задачи
+            todoList.add(handlers.currentTaskText);
         }
+        // input reset
+        todoList.html.input.value = '';
+        handlers.currentTaskText = '';
+        // разблокировать ввод
+        todoList.html.input.focus();
+        // отменить действие по умолчанию
+        event.preventDefault();
     }
 
     return handlers;
@@ -98,13 +73,13 @@ function setEventHandlers() {
 }
 
 function startHandlers() {
-    document.addEventListener('click', myHandlers.task.input);
+    todoList.html.button.addEventListener('click', myHandlers.task.clickOnButtonAdd);
     document.addEventListener('input', myHandlers.task.input);
     document.addEventListener('keydown', myHandlers.task.keydown);
 }
 
 function stopHandlers() {
-    document.removeEventListener('click', myHandlers.task.input);
+    todoList.html.button.removeEventListener('click', myHandlers.task.clickOnButtonAdd);
     document.removeEventListener('input', myHandlers.task.input);
     document.removeEventListener('keydown', myHandlers.task.keydown);
 }
