@@ -15,7 +15,7 @@ const todoList = {
         input: document.getElementById('task__input'),
         button: document.getElementById('tasks__add'),
         list: document.getElementById('tasks__list'),
-        taskTemplate: (taskText) => `
+        tasksTemplate: (taskText) => `
          <div class=${todoList.classes.task}>
              <div class=${todoList.classes.title}>
                 ${taskText}
@@ -24,7 +24,7 @@ const todoList = {
          </div>`
     },
     add: (taskText) => {
-        todoList.html.list.insertAdjacentHTML('afterbegin',todoList.html.taskTemplate(taskText));
+        todoList.html.list.insertAdjacentHTML('afterbegin',todoList.html.tasksTemplate(taskText));
         const removeWidget = todoList.html.list.firstElementChild.querySelector(`a.${todoList.classes.delete}`);
         removeWidget.onclick = myHandlers.task.removeTaskByClick;
     }
