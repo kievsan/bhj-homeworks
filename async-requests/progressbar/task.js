@@ -13,13 +13,16 @@ function setSendFileFormHandlers() {
 
     handlers.clickOnSendButton = (event) => {
         xhr.send(formData);
+        event.preventDefault();
     }
 
     handlers.sendFile = (event) => {
         const xhr = event.target;
         // if (xhr.readyState === xhr.DONE && xhr.status === 201) {
         if (xhr.readyState === xhr.DONE) {
-            alert(`${xhr.status}: ${xhr.statusText}. ${JSON.parse(xhr.response).message}!`);
+            setTimeout( () => {
+                alert(`${xhr.status}: ${xhr.statusText}. ${JSON.parse(xhr.response).message}!`);
+            }, 100);
         }
     }
 
@@ -37,7 +40,7 @@ function setEventHandlers() {
 }
 
 
-let formData = new FormData(document.forms.file),
+let formData = new FormData(fileSendForm),
     xhr = new XMLHttpRequest(),
     myHandlers = setEventHandlers();
 
