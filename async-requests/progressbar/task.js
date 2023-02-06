@@ -16,19 +16,13 @@ function setSendFileFormHandlers() {
         event.preventDefault();
     }
 
-    handlers.sendFile = (event) => {
-        const xhr = event.target;
-        // if (xhr.readyState === xhr.DONE && xhr.status === 201) {
-        if (xhr.readyState === xhr.DONE) {
-            setTimeout( () => {
-                alert(`${xhr.status}: ${xhr.statusText}. ${JSON.parse(xhr.response).message}!`);
-            }, 100);
-        }
-    }
+    handlers.sendFile = (event) => setTimeout( () => alert(
+        `${xhr.status}: ${xhr.statusText}. ${JSON.parse(xhr.response).message}!`
+    ), 100);
 
     handlers.updateProgress = (event) => progress.value = event.loaded / event.total;
 
-    handlers.loaderTransferFailed = (event) => alert("При отправке файла произошла ошибка!");
+    handlers.loaderTransferFailed = (event) => alert(`При отправке файла произошла ошибка! (${xhr.status})`);
 
     return handlers;
 }
@@ -41,12 +35,13 @@ function setEventHandlers() {
 
 
 let formData = new FormData(fileSendForm),
-    xhr = new XMLHttpRequest(),
     myHandlers = setEventHandlers();
 
-xhr.onreadystatechange = myHandlers.sendFileForm.sendFile;
-xhr.onprogress = myHandlers.sendFileForm.updateProgress;
-xhr.onerror = myHandlers.sendFileForm.loaderTransferFailed;
+const xhr = new XMLHttpRequest();
+
+xhr.upload.onloadend = myHandlers.sendFileForm.sendFile;
+xhr.upload.onprogress = myHandlers.sendFileForm.updateProgress;
+xhr.upload.onerror = myHandlers.sendFileForm.loaderTransferFailed;
 
 xhr.open('POST', URLPost, true);
 buttonSend.addEventListener('click', myHandlers.sendFileForm.clickOnSendButton);
