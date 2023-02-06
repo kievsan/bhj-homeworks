@@ -108,9 +108,9 @@ class GroceryCart {
 
     add = (product) => {
         const cartProduct = this.list().find(cartProduct => cartProduct.id === product.id);
-        if (cartProduct) {
+        if (cartProduct) {  //    Увеличить кол-во продукта в Корзине
             cartProduct.html.value.textContent = cartProduct.quantity() + product.quantity();
-        } else {
+        } else {  //    Добавить продукт в Корзину
             this.html.products.insertAdjacentHTML('beforeend',
                 this.html.productsTemplate(product.id, product.img, product.quantity()));
         }
@@ -163,7 +163,7 @@ function setCartEventHandlers(store = new GroceryStore()) {
 
     handlers.clickOnButtonInc = (event) => {
         const product = new Product(event.target);
-        if (product.quantity() < 100) {
+        if (product.quantity() < 99) {
             product.html.value.textContent = product.quantity() + 1;
         }
     }
