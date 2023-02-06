@@ -17,7 +17,7 @@ const answerButtonTemplate = (answer, id) => `
     `,
     statAnswerButtonTemplate = (statAnswer) => `
         <div class="poll__answer stat__answer">${statAnswer['answer']}: 
-            <label class="stat__answer__percent" style="font-weight: bold;"> ${statAnswer['votes']}%</label>
+            <span class="stat__answer__percent" style="font-weight: bold;"> ${statAnswer['votes']}%</span>
         </div>
     `,
     questionContainer = document.getElementById('poll__title'),
@@ -103,7 +103,7 @@ function setPollHandlers() {
             alert('Спасибо, Ваш вопрос засчитан!');
             stopPoll();
             startLoadPollRating(event.target.dataset.id);
-        }, 180);
+        }, 200);
     }
 
     handlers.loadPoll = (event) => {
