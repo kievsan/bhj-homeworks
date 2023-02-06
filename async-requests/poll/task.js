@@ -13,25 +13,26 @@ const answerButtonTemplate = (answer, id) => `
                  border: thin solid #666666;
                  border-radius: 15%">
             ${answer}
-        </button>
-    `,
-    statAnswerButtonTemplate = (statAnswer) => `
+        </button>`;
+
+const statAnswerButtonTemplate = (statAnswer) => `
         <div class="poll__answer stat__answer">${statAnswer['answer']}: 
             <span class="stat__answer__percent" style="font-weight: bold;"> ${statAnswer['votes']}%</span>
-        </div>
-    `,
-    questionContainer = document.getElementById('poll__title'),
+        </div>`;
+
+const questionContainer = document.getElementById('poll__title'),
     answersContainer = document.getElementById('poll__answers'),
     clearAnswersContainer = () => answersContainer.querySelectorAll(`.poll__answer`).forEach(answer => answer.remove()),
-    clearQuestion = () => questionContainer.textContent = ''
-;
+    clearQuestion = () => questionContainer.textContent = '';
+
 const setPollID = () => questionContainer.dataset.id = currentPoll.id,
     setPollStyle = (weight= 'bold', size= 22, font = 'Arial') => {
         questionContainer.style.fontFamily = font;
         questionContainer.style.fontWeight = weight;
         questionContainer.style.fontSize = size.toString();
-    },
-    stopPoll = () => clearAnswersContainer(),
+    };
+
+const stopPoll = () => clearAnswersContainer(),
     startPoll = (json) => {
         let poll = getPoll(json);
         const pollIsEmpty = !poll;
@@ -50,8 +51,9 @@ const setPollID = () => questionContainer.dataset.id = currentPoll.id,
         poll.answers.forEach(answer => answersContainer.insertAdjacentHTML('beforeend',
             answerButtonTemplate(answer, poll.answers.indexOf(answer))));
         startPollButtonsHandler();
-    },
-    getPoll = (json) => {
+    };
+
+const getPoll = (json) => {
         if (!json) { return undefined }
         const poll = JSON.parse(json);
         if (currentPoll.answeredPoolsIDs.includes(poll.id)) { return undefined }  // уже отвечал на этот вопрос
@@ -60,21 +62,23 @@ const setPollID = () => questionContainer.dataset.id = currentPoll.id,
         currentPoll.question = poll.data.title.trim();
         currentPoll.answers = poll.data.answers;
         return currentPoll ?? {};
-    }
-;
+};
+
 const startRating = (json) => {
         const poll = getRating(json);
         poll.statAnswers.forEach(statAnswer => answersContainer.insertAdjacentHTML('beforeend',
             statAnswerButtonTemplate(statAnswer)));
         reloadPoll();
-    },
-    getRating = (json) => {
+};
+
+const getRating = (json) => {
         if (!json) { return {} }
         const poll = JSON.parse(json);
         currentPoll.statAnswers = poll['stat'];
         return currentPoll ?? {};
-    },
-    reloadPoll = () => {
+    };
+
+const reloadPoll = () => {
         setTimeout( () => {
             clearAnswersContainer();
             clearQuestion();
@@ -82,8 +86,7 @@ const startRating = (json) => {
                 startLoadPoll();
             }
         }, 2000);
-    }
-;
+};
 
 function setPollHandlers() {
     let handlers = {}
@@ -153,8 +156,8 @@ function stopPollHandlers() {
 }
 
 
-let xhr = new XMLHttpRequest(),
-    myHandlers = setEventHandlers();
+const xhr = new XMLHttpRequest();
+let myHandlers = setEventHandlers();
 
 startLoadPoll();
 
